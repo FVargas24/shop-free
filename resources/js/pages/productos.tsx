@@ -14,6 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { type BreadcrumbItem } from '@/types';
+import { toast } from 'sonner';
 
 interface ColorVariant {
     [key: string]: any;
@@ -126,13 +127,38 @@ export default function Productos({ productos }: Props) {
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] || null;
-        setData('imagen', file);
-        if (file) {
-            const url = URL.createObjectURL(file);
-            setPreviewImage(url);
-        } else {
+        if (!file) {
+            setData('imagen', null);
             setPreviewImage(editingProducto?.imagen || null);
+            return;
         }
+
+        // Validar formato de imagen permitido
+        const allowedExtensions = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/webp'];
+        const isAllowedExtension = allowedExtensions.includes(file.type) || /\.(jpe?g|png|gif|webp)$/i.test(file.name);
+
+        if (!isAllowedExtension) {
+            toast.error('Formato no permitido', {
+                description: 'Solo se permiten imágenes en formato JPG, PNG, WEBP o GIF.',
+                duration: 5000,
+            });
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            return;
+        }
+
+        // Validar tamaño máximo (2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            toast.error('Imagen demasiado pesada', {
+                description: 'El tamaño máximo permitido para la foto es de 2 MB.',
+                duration: 5000,
+            });
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            return;
+        }
+
+        setData('imagen', file);
+        const url = URL.createObjectURL(file);
+        setPreviewImage(url);
     };
 
     const toggleTalla = (talla: string) => {
@@ -196,7 +222,17 @@ export default function Productos({ productos }: Props) {
                     setEditingProducto(null);
                     reset();
                     setPreviewImage(null);
+                    toast.success('Producto actualizado', {
+                        description: 'Los cambios se han guardado correctamente.',
+                    });
                 },
+                onError: (errs) => {
+                    const firstKey = Object.keys(errs)[0];
+                    toast.error('Error al actualizar producto', {
+                        description: errs[firstKey] || 'Verifica los campos obligatorios del formulario.',
+                        duration: 5000,
+                    });
+                }
             });
         } else {
             // Creación de producto nuevo
@@ -205,7 +241,17 @@ export default function Productos({ productos }: Props) {
                     setOpen(false);
                     reset();
                     setPreviewImage(null);
+                    toast.success('Producto creado con éxito', {
+                        description: 'Tu nuevo producto ya está publicado en el catálogo.',
+                    });
                 },
+                onError: (errs) => {
+                    const firstKey = Object.keys(errs)[0];
+                    toast.error('Error al guardar producto', {
+                        description: errs[firstKey] || 'Por favor verifica la información ingresada.',
+                        duration: 5000,
+                    });
+                }
             });
         }
     };
@@ -346,7 +392,7 @@ export default function Productos({ productos }: Props) {
                                         ref={fileInputRef}
                                         id="imagen-input"
                                         type="file"
-                                        accept="image/*"
+                                        accept="image/png,image/jpeg,image/jpg,image/webp,image/gif,.png,.jpg,.jpeg,.webp,.gif"
                                         onChange={handleFileChange}
                                         className="hidden"
                                     />

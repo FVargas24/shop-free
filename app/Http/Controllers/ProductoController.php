@@ -26,6 +26,13 @@ class ProductoController extends Controller
             'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'tallas' => 'nullable|array',
             'colores' => 'nullable|array',
+        ], [
+            'nombre.required' => 'El nombre del producto es obligatorio.',
+            'precio.required' => 'El precio del producto es obligatorio.',
+            'precio.numeric' => 'El precio debe ser un número válido.',
+            'imagen.image' => 'El archivo seleccionado debe ser una imagen.',
+            'imagen.mimes' => 'Formato no válido. Solo se permiten imágenes en JPG, PNG, WEBP o GIF.',
+            'imagen.max' => 'La imagen no debe pesar más de 2 MB.',
         ]);
 
         $data = $request->all();
@@ -51,6 +58,13 @@ class ProductoController extends Controller
             'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'tallas' => 'nullable|array',
             'colores' => 'nullable|array',
+        ], [
+            'nombre.required' => 'El nombre del producto es obligatorio.',
+            'precio.required' => 'El precio del producto es obligatorio.',
+            'precio.numeric' => 'El precio debe ser un número válido.',
+            'imagen.image' => 'El archivo seleccionado debe ser una imagen.',
+            'imagen.mimes' => 'Formato no válido. Solo se permiten imágenes en JPG, PNG, WEBP o GIF.',
+            'imagen.max' => 'La imagen no debe pesar más de 2 MB.',
         ]);
 
         $data = $request->except(['imagen']);

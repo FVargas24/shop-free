@@ -482,7 +482,6 @@ export default function Welcome({ productos, empresa, isExpired = false }: Welco
                                             <ShoppingCart className="h-5 w-5 text-primary" />
                                             Tu Carrito de Compras
                                         </div>
-                                        <Badge variant="secondary" className="text-xs">{cartCount} items</Badge>
                                     </SheetTitle>
                                 </SheetHeader>
 

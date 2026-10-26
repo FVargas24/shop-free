@@ -148,10 +148,7 @@ export default function Dashboard({ pedidos }: DashboardProps) {
                                             ) : (
                                                 <div className="text-xs text-center text-muted-foreground">Sin WhatsApp</div>
                                             )}
-                                            <Button variant="outline" size="sm" className="w-full text-xs rounded-xl h-8 border-border/90 hover:bg-sky-50/60 hover:text-sky-700">
-                                                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                                                Procesar
-                                            </Button>
+                                            
                                         </div>
                                     </div>
                                 </Card>

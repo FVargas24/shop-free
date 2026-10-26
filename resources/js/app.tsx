@@ -6,6 +6,8 @@ import { createRoot } from 'react-dom/client';
 import { route as routeFn } from 'ziggy-js';
 import { initializeTheme } from './hooks/use-appearance';
 
+import { Toaster } from '@/components/ui/sonner';
+
 declare global {
     const route: typeof routeFn;
 }
@@ -18,7 +20,12 @@ createInertiaApp({
     setup({ el, App, props }) {
         const root = createRoot(el);
 
-        root.render(<App {...props} />);
+        root.render(
+            <>
+                <App {...props} />
+                <Toaster position="top-right" richColors />
+            </>
+        );
     },
     progress: {
         color: '#4B5563',
