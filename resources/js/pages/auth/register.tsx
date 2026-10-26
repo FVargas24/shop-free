@@ -12,7 +12,8 @@ import {
     CheckCircle2, 
     Check, 
     Eye,
-    EyeOff
+    EyeOff,
+    Loader2
 } from 'lucide-react';
 import { FormEventHandler, useState, useEffect } from 'react';
 
@@ -24,6 +25,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import AuthLayout from '@/layouts/auth-layout';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
 
 interface RegisterForm {
     name: string;
@@ -156,10 +158,15 @@ export default function Register() {
         }
     };
 
+    const [isCheckingAvailability, setIsCheckingAvailability] = useState(false);
+    const [empresaTakenError, setEmpresaTakenError] = useState<string | null>(null);
+    const [emailTakenError, setEmailTakenError] = useState<string | null>(null);
+
     const validateStep = (currentStep: number) => {
         clearErrors();
         if (currentStep === 1) {
             if (!data.nombre_empresa.trim()) return false;
+            if (empresaTakenError) return false;
             if (!data.tipo) return false;
             if (!phoneRaw || phoneRaw.length < selectedCountry.length) {
                 setPhoneError(`Ingresa tu número completo (${selectedCountry.length} dígitos)`);
@@ -171,14 +178,58 @@ export default function Register() {
             }
         } else if (currentStep === 2) {
             if (!data.name.trim() || !data.email.trim() || !data.password || !data.password_confirmation) return false;
+            if (emailTakenError) return false;
             if (data.password !== data.password_confirmation) return false;
         }
         return true;
     };
 
-    const nextStep = () => {
-        if (validateStep(step)) {
-            setStep((prev) => prev + 1);
+    const nextStep = async () => {
+        if (!validateStep(step)) return;
+
+        // Validación en tiempo real con el servidor antes de permitir avanzar
+        if (step === 1) {
+            setIsCheckingAvailability(true);
+            try {
+                const res = await fetch(`/register/check-availability?type=empresa&value=${encodeURIComponent(data.nombre_empresa)}`);
+                const json = await res.json();
+                setIsCheckingAvailability(false);
+
+                if (!json.available) {
+                    setEmpresaTakenError(json.message);
+                    toast.error('Nombre de tienda no disponible', {
+                        description: json.message,
+                        duration: 5000,
+                    });
+                    return;
+                }
+                setEmpresaTakenError(null);
+                setStep(2);
+            } catch (e) {
+                setIsCheckingAvailability(false);
+                setStep(2);
+            }
+        } else if (step === 2) {
+            setIsCheckingAvailability(true);
+            try {
+                const res = await fetch(`/register/check-availability?type=email&value=${encodeURIComponent(data.email)}`);
+                const json = await res.json();
+                setIsCheckingAvailability(false);
+
+                if (!json.available) {
+                    setEmailTakenError(json.message);
+                    toast.error('Correo ya registrado', {
+                        description: json.message,
+                        duration: 5000,
+                    });
+                    return;
+                }
+                setEmailTakenError(null);
+                setStep(3);
+            } catch (e) {
+                setIsCheckingAvailability(false);
+                setStep(3);
+            }
         }
     };
 
@@ -197,10 +248,40 @@ export default function Register() {
                 setIsSimulatingLoad(false);
                 setIsSuccessOpen(true);
             },
-            onError: () => {
+            onError: (errs) => {
                 setIsSimulatingLoad(false);
-                if (errors.email || errors.name || errors.password) setStep(2);
-                else if (errors.nombre_empresa || errors.tipo || errors.celular) setStep(1);
+                
+                // Mostrar notificaciones Toast con Sonner arriba a la derecha
+                if (errs.email) {
+                    toast.error('Correo ya registrado', {
+                        description: errs.email,
+                        duration: 5000,
+                    });
+                    setStep(2);
+                } else if (errs.nombre_empresa) {
+                    toast.error('Nombre de tienda no disponible', {
+                        description: errs.nombre_empresa,
+                        duration: 5000,
+                    });
+                    setStep(1);
+                } else if (errs.password) {
+                    toast.error('Problema con la contraseña', {
+                        description: errs.password,
+                        duration: 4000,
+                    });
+                    setStep(2);
+                } else if (errs.celular) {
+                    toast.error('Número de celular inválido', {
+                        description: errs.celular,
+                        duration: 4000,
+                    });
+                    setStep(1);
+                } else {
+                    const firstError = Object.values(errs)[0];
+                    toast.error('Verifica los datos ingresados', {
+                        description: firstError || 'Ocurrió un error al crear la cuenta.',
+                    });
+                }
             }
         });
     };
@@ -268,13 +349,22 @@ export default function Register() {
                                 id="nombre_empresa"
                                 required
                                 value={data.nombre_empresa}
-                                onChange={(e) => setData('nombre_empresa', e.target.value.toUpperCase())}
+                                onChange={(e) => {
+                                    setData('nombre_empresa', e.target.value.toUpperCase());
+                                    setEmpresaTakenError(null);
+                                }}
                                 disabled={processing}
                                 placeholder="EJ: BOUTIQUE ELEGANTE, BURGER QUEEN..."
-                                className="h-11 rounded-xl text-xs uppercase font-bold tracking-wide shadow-2xs"
+                                className={`h-11 rounded-xl text-xs uppercase font-bold tracking-wide shadow-2xs ${
+                                    empresaTakenError ? 'border-destructive focus-visible:ring-destructive' : ''
+                                }`}
                                 autoFocus
                             />
-                            <InputError message={errors.nombre_empresa} />
+                            {empresaTakenError ? (
+                                <p className="text-[11px] text-destructive font-medium">{empresaTakenError}</p>
+                            ) : (
+                                <InputError message={errors.nombre_empresa} />
+                            )}
                             <p className="text-[11px] text-muted-foreground">
                                 Tu catálogo estará disponible en: <span className="font-mono text-sky-600 dark:text-sky-400 font-semibold">/{data.nombre_empresa ? data.nombre_empresa.toLowerCase().replace(/[^a-z0-9]/g, '-') : 'tu-tienda'}</span>
                             </p>
@@ -406,10 +496,18 @@ export default function Register() {
                         <Button 
                             type="button" 
                             onClick={nextStep} 
-                            disabled={!data.nombre_empresa.trim() || !data.tipo || !phoneRaw || phoneRaw.length < selectedCountry.length || !!phoneError}
+                            disabled={isCheckingAvailability || !data.nombre_empresa.trim() || !!empresaTakenError || !data.tipo || !phoneRaw || phoneRaw.length < selectedCountry.length || !!phoneError}
                             className="mt-2 h-11 rounded-xl font-bold text-sm bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 shadow-md shadow-sky-600/20"
                         >
-                            Continuar al Paso 2 <ChevronRight className="h-4 w-4 ml-1.5" />
+                            {isCheckingAvailability ? (
+                                <>
+                                    <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> Verificando disponibilidad...
+                                </>
+                            ) : (
+                                <>
+                                    Siguiente <ChevronRight className="h-4 w-4 ml-1.5" />
+                                </>
+                            )}
                         </Button>
                     </div>
                 )}
@@ -446,12 +544,21 @@ export default function Register() {
                                 type="email"
                                 required
                                 value={data.email}
-                                onChange={(e) => setData('email', e.target.value.toLowerCase())}
-                                disabled={processing}
+                                onChange={(e) => {
+                                    setData('email', e.target.value.toLowerCase());
+                                    setEmailTakenError(null);
+                                }}
+                                disabled={processing || isCheckingAvailability}
                                 placeholder="tu-correo@ejemplo.com"
-                                className="h-11 rounded-xl text-xs font-semibold shadow-2xs"
+                                className={`h-11 rounded-xl text-xs font-semibold shadow-2xs ${
+                                    emailTakenError ? 'border-destructive focus-visible:ring-destructive' : ''
+                                }`}
                             />
-                            <InputError message={errors.email} />
+                            {emailTakenError ? (
+                                <p className="text-[11px] text-destructive font-medium">{emailTakenError}</p>
+                            ) : (
+                                <InputError message={errors.email} />
+                            )}
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -517,16 +624,24 @@ export default function Register() {
                         )}
 
                         <div className="grid grid-cols-2 gap-3 mt-2">
-                            <Button type="button" onClick={prevStep} variant="outline" className="h-11 rounded-xl text-xs font-bold">
+                            <Button type="button" onClick={prevStep} variant="outline" className="h-11 rounded-xl text-xs font-bold" disabled={isCheckingAvailability}>
                                 <ChevronLeft className="h-4 w-4 mr-1.5" /> Anterior
                             </Button>
                             <Button 
                                 type="button" 
                                 onClick={nextStep} 
-                                disabled={!data.name.trim() || !data.email.trim() || !data.password || data.password.length < 8 || data.password !== data.password_confirmation}
+                                disabled={isCheckingAvailability || !data.name.trim() || !data.email.trim() || !!emailTakenError || !data.password || data.password.length < 8 || data.password !== data.password_confirmation}
                                 className="h-11 rounded-xl font-bold text-xs bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 shadow-md shadow-sky-600/20"
                             >
-                                Siguiente <ChevronRight className="h-4 w-4 ml-1.5" />
+                                {isCheckingAvailability ? (
+                                    <>
+                                        <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> Verificando...
+                                    </>
+                                ) : (
+                                    <>
+                                        Siguiente <ChevronRight className="h-4 w-4 ml-1.5" />
+                                    </>
+                                )}
                             </Button>
                         </div>
                     </div>

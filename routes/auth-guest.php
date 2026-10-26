@@ -16,6 +16,9 @@ Route::middleware('guest')->group(function () {
 
     Route::post('register', [RegisteredUserController::class, 'store']);
 
+    Route::get('register/check-availability', [RegisteredUserController::class, 'checkAvailability'])
+        ->name('register.check-availability');
+
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 

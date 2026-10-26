@@ -71,20 +71,6 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                     </div>
 
                     <div className="grid gap-1.5">
-                        <div className="flex items-center justify-between">
-                            <Label htmlFor="password" className="text-xs font-bold text-foreground flex items-center gap-1.5">
-                                <Lock className="h-3.5 w-3.5 text-sky-500" /> Contraseña
-                            </Label>
-                            {canResetPassword && (
-                                <Link 
-                                    href={route('password.request')} 
-                                    className="text-xs font-semibold text-sky-600 dark:text-sky-400 hover:underline" 
-                                    tabIndex={5}
-                                >
-                                    ¿Olvidaste tu clave?
-                                </Link>
-                            )}
-                        </div>
                         <div className="relative">
                             <Input
                                 id="password"

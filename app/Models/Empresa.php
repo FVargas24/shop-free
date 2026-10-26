@@ -31,11 +31,6 @@ class Empresa extends Model
         static::creating(function ($empresa) {
             if (empty($empresa->slug)) {
                 $slug = \Illuminate\Support\Str::slug($empresa->nombre_empresa);
-                $originalSlug = $slug;
-                $count = 1;
-                while (static::where('slug', $slug)->exists()) {
-                    $slug = $originalSlug . '-' . $count++;
-                }
                 $empresa->slug = $slug;
             }
 
