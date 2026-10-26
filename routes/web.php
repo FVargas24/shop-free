@@ -17,9 +17,12 @@ Route::get('/', function () {
 
 Route::prefix('{empresa}')->group(function () {
     Route::get('/', function () {
+        $tenant = app('tenant');
+        $productos = $tenant ? $tenant->productos()->latest()->get() : \App\Models\Producto::all();
+
         return Inertia::render('welcome', [
-            'productos' => \App\Models\Producto::all(),
-            'empresa' => app('tenant')
+            'productos' => $productos,
+            'empresa' => $tenant
         ]);
     })->name('catalog.show');
 
@@ -30,6 +33,7 @@ Route::prefix('{empresa}')->group(function () {
 
         Route::get('productos', [ProductoController::class, 'index'])->name('productos.index');
         Route::post('productos', [ProductoController::class, 'store'])->name('productos.store');
+        Route::post('productos/{producto}', [ProductoController::class, 'update'])->name('productos.update.post');
         Route::patch('productos/{producto}', [ProductoController::class, 'update'])->name('productos.update');
         Route::delete('productos/{producto}', [ProductoController::class, 'destroy'])->name('productos.destroy');
 

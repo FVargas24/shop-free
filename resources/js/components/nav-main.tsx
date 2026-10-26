@@ -100,15 +100,7 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                                     <p className="text-xs text-muted-foreground mt-0.5">Punto de venta e inventarios para múltiples sucursales.</p>
                                 </div>
                             </div>
-                            <div className="bg-white dark:bg-zinc-900 border rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex gap-3">
-                                <div className="h-10 w-10 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center shrink-0">
-                                    <MessageCircle className="h-5 w-5" />
-                                </div>
-                                <div>
-                                    <h4 className="font-bold text-sm">WhatsApp Bot</h4>
-                                    <p className="text-xs text-muted-foreground mt-0.5">Automatización de mensajes y atención al cliente.</p>
-                                </div>
-                            </div>
+                          
                         </div>
 
                         <div className="flex flex-col sm:flex-row gap-3">

@@ -1,7 +1,8 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { 
     Package, ShoppingCart, Trash2, CheckCircle2, ChevronRight, Phone, 
-    MapPin, Search, ArrowRight, Sparkles, Filter, X, Plus, Minus, MessageCircle, ExternalLink 
+    MapPin, Search, ArrowRight, Sparkles, Filter, X, Plus, Minus, MessageCircle, ExternalLink,
+    LayoutGrid, List, ShieldCheck, Truck, RefreshCw
 } from 'lucide-react';
 import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
@@ -72,7 +73,9 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
     const currentTheme = COLOR_THEMES[empresa?.tema_color || 'emerald'] || COLOR_THEMES.emerald;
     const currentFont = FONT_THEMES[empresa?.tipografia || 'inter'] || FONT_THEMES.inter;
     const backgroundStyle = empresa?.fondo_estilo || 'dots';
-    const layoutVista = empresa?.layout_vista || 'grid';
+    
+    // Vista por defecto: cuadrícula moderna de 2 a 4 columnas
+    const [userLayout, setUserLayout] = useState<'grid' | 'list'>((empresa?.layout_vista as any) || 'grid');
 
     // Estados de navegación y catálogo
     const [cart, setCart] = useState<CartItem[]>([]);
@@ -406,7 +409,23 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
             </header>
 
             {/* SECCIÓN PRINCIPAL: FILTROS & BÚSQUEDA */}
-            <main className="max-w-6xl mx-auto px-4 md:px-6 py-6 space-y-6">
+            <main className="max-w-6xl mx-auto px-4 md:px-6 py-4 space-y-6">
+                {/* Banner de Confianza y Facilidad de Uso */}
+                <div className="grid grid-cols-3 gap-2 py-2.5 px-4 rounded-2xl bg-card/60 backdrop-blur-md border border-border/60 text-center text-xs">
+                    <div className="flex items-center justify-center gap-1.5 text-muted-foreground">
+                        <Truck className="h-4 w-4 text-primary shrink-0" />
+                        <span className="truncate font-medium">Envíos a todo el país</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-1.5 text-muted-foreground border-x border-border/60">
+                        <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
+                        <span className="truncate font-medium">Compra 100% Segura</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-1.5 text-muted-foreground">
+                        <MessageCircle className="h-4 w-4 text-emerald-600 shrink-0" />
+                        <span className="truncate font-medium">Atención por WhatsApp</span>
+                    </div>
+                </div>
+
                 <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
                     {/* Input Búsqueda en vivo */}
                     <div className="relative flex-1 max-w-md">
@@ -414,8 +433,8 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
                         <Input
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            placeholder="Buscar en el catálogo..."
-                            className="pl-9 h-10 rounded-xl bg-card/80 backdrop-blur-xs border-border/80 text-xs shadow-2xs"
+                            placeholder="Buscar por nombre de producto..."
+                            className="pl-9 h-10 rounded-xl bg-card/90 backdrop-blur-xs border-border/80 text-xs shadow-2xs"
                         />
                         {searchQuery && (
                             <button 
@@ -427,34 +446,56 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
                         )}
                     </div>
 
-                    {/* Chips de filtro por tallas (si existen en el catálogo) */}
-                    {allAvailableTallas.length > 0 && (
-                        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
-                            <button
-                                onClick={() => setSelectedTallaFilter('all')}
-                                className={`px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all ${
-                                    selectedTallaFilter === 'all'
-                                        ? 'bg-foreground text-background shadow-xs'
-                                        : 'bg-card/70 border border-border text-muted-foreground hover:text-foreground'
-                                }`}
-                            >
-                                Todas
-                            </button>
-                            {allAvailableTallas.map((talla) => (
+                    <div className="flex items-center gap-2 justify-between sm:justify-end">
+                        {/* Chips de filtro por tallas */}
+                        {allAvailableTallas.length > 0 && (
+                            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
                                 <button
-                                    key={talla}
-                                    onClick={() => setSelectedTallaFilter(talla)}
+                                    onClick={() => setSelectedTallaFilter('all')}
                                     className={`px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all ${
-                                        selectedTallaFilter === talla
+                                        selectedTallaFilter === 'all'
                                             ? 'bg-foreground text-background shadow-xs'
                                             : 'bg-card/70 border border-border text-muted-foreground hover:text-foreground'
                                     }`}
                                 >
-                                    Talla {talla}
+                                    Todas
                                 </button>
-                            ))}
+                                {allAvailableTallas.map((talla) => (
+                                    <button
+                                        key={talla}
+                                        onClick={() => setSelectedTallaFilter(talla)}
+                                        className={`px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all ${
+                                            selectedTallaFilter === talla
+                                                ? 'bg-foreground text-background shadow-xs'
+                                                : 'bg-card/70 border border-border text-muted-foreground hover:text-foreground'
+                                        }`}
+                                    >
+                                        Talla {talla}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        {/* Botones Switch Cuadrícula vs Lista */}
+                        <div className="flex items-center border rounded-xl p-0.5 bg-card/80 border-border/80 shrink-0">
+                            <button
+                                type="button"
+                                onClick={() => setUserLayout('grid')}
+                                className={`p-1.5 rounded-lg transition-all ${userLayout === 'grid' ? 'bg-primary text-primary-foreground shadow-xs' : 'text-muted-foreground hover:text-foreground'}`}
+                                title="Vista en Cuadrícula"
+                            >
+                                <LayoutGrid className="h-4 w-4" />
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setUserLayout('list')}
+                                className={`p-1.5 rounded-lg transition-all ${userLayout === 'list' ? 'bg-primary text-primary-foreground shadow-xs' : 'text-muted-foreground hover:text-foreground'}`}
+                                title="Vista en Lista"
+                            >
+                                <List className="h-4 w-4" />
+                            </button>
                         </div>
-                    )}
+                    </div>
                 </div>
 
                 {/* LISTADO DE PRODUCTOS (GRID O LIST) */}
@@ -471,21 +512,21 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
                     </div>
                 ) : (
                     <div className={
-                        layoutVista === 'list'
-                            ? 'space-y-3'
-                            : 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5'
+                        userLayout === 'list'
+                            ? 'grid grid-cols-1 md:grid-cols-2 gap-3'
+                            : 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5'
                     }>
                         {filteredProductos.map((producto) => (
                             <Card 
                                 key={producto.id} 
                                 className={`group overflow-hidden rounded-2xl border border-border/70 bg-card/85 backdrop-blur-xs transition-all duration-300 hover:shadow-xl hover:border-primary/40 ${
-                                    layoutVista === 'list' ? 'flex flex-row items-center p-3 gap-4' : 'flex flex-col'
+                                    userLayout === 'list' ? 'flex flex-row items-center p-3 gap-4' : 'flex flex-col'
                                 }`}
                             >
                                 {/* Imagen con Aspect Ratio optimizado */}
                                 <div 
                                     className={`relative bg-muted overflow-hidden cursor-pointer ${
-                                        layoutVista === 'list' 
+                                        userLayout === 'list' 
                                             ? 'w-24 h-24 sm:w-28 sm:h-28 rounded-xl shrink-0' 
                                             : 'aspect-square w-full'
                                     }`}
@@ -516,7 +557,7 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
                                 </div>
 
                                 {/* Información del Producto */}
-                                <div className={`flex flex-col justify-between flex-1 ${layoutVista === 'list' ? 'min-w-0' : 'p-3.5 space-y-2'}`}>
+                                <div className={`flex flex-col justify-between flex-1 ${userLayout === 'list' ? 'min-w-0' : 'p-3.5 space-y-2'}`}>
                                     <div>
                                         <h3 
                                             onClick={() => openQuickView(producto)}
@@ -570,6 +611,29 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
                         ))}
                     </div>
                 )}
+
+                {/* FOOTER MODERNO CON BRANDING MIRACODE */}
+                <footer className="mt-16 pt-8 pb-14 border-t border-border/50 text-center space-y-3">
+                    <div className="flex items-center justify-center gap-2">
+                        <img src="/logo.svg" alt="MiraCode Logo" className="h-6 w-6 object-contain" />
+                        <span className="font-extrabold text-sm tracking-tight text-foreground">MiraCode</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                        <span>Esta página está creada con</span>
+                        <a 
+                            href="https://miracode.org" 
+                            target="_blank" 
+                            rel="noreferrer"
+                            className="font-bold text-foreground hover:text-primary transition-colors underline-offset-4 hover:underline"
+                        >
+                            MiraCode
+                        </a>
+                        <span>• Plataforma de Comercio Digital</span>
+                    </p>
+                    <p className="text-[11px] text-muted-foreground/60">
+                        © {new Date().getFullYear()} {empresa?.nombre_empresa || 'Tienda'}. Todos los derechos reservados.
+                    </p>
+                </footer>
             </main>
 
             {/* BOTÓN FLOTANTE MÓVIL DEL CARRITO (STICKY PILL) */}

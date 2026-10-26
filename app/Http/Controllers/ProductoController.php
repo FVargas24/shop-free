@@ -40,7 +40,7 @@ class ProductoController extends Controller
         return back();
     }
 
-    public function update(Request $request, Producto $producto)
+    public function update(Request $request, string $empresa, Producto $producto)
     {
         Gate::authorize('update', $producto);
 
@@ -53,7 +53,7 @@ class ProductoController extends Controller
             'colores' => 'nullable|array',
         ]);
 
-        $data = $request->all();
+        $data = $request->except(['imagen']);
 
         if ($request->hasFile('imagen')) {
             $path = $request->file('imagen')->store('productos', 'public');
@@ -65,7 +65,7 @@ class ProductoController extends Controller
         return back();
     }
 
-    public function destroy(Producto $producto)
+    public function destroy(string $empresa, Producto $producto)
     {
         Gate::authorize('delete', $producto);
         $producto->delete();

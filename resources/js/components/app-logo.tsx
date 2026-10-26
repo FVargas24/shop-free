@@ -2,13 +2,14 @@ import AppLogoIcon from './app-logo-icon';
 
 export default function AppLogo() {
     return (
-        <>
-            <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
-                <AppLogoIcon className="size-5 fill-current text-white dark:text-black" />
+        <div className="flex items-center gap-2.5">
+            <div className="flex aspect-square size-9 items-center justify-center rounded-xl bg-white/5 border border-white/10 p-1 shadow-xs">
+                <img src="/logo.svg" alt="MiraCode Logo" className="size-full object-contain" />
             </div>
-            <div className="ml-1 grid flex-1 text-left text-sm">
-                <span className="mb-0.5 truncate leading-none font-semibold">MiraCode</span>
+            <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-bold tracking-tight text-foreground">MiraCode</span>
+                <span className="text-[10px] text-muted-foreground leading-none">Shop Platform</span>
             </div>
-        </>
+        </div>
     );
 }
