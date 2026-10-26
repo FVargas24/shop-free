@@ -72,43 +72,43 @@
     ::before,
     ::backdrop,
     ::file-selector-button {
-        border-color: var(--color-zinc-200, currentColor);
+        border-color: var(--border, currentColor);
     }
 }
 
 :root {
-    --background: hsl(210, 20%, 99%);
+    --background: hsl(215, 30%, 97.5%); /* Fondo ligeramente matizado con azul hielo suave */
     --foreground: hsl(222.2, 47.4%, 11.2%);
     --card: hsl(0, 0%, 100%);
     --card-foreground: hsl(222.2, 47.4%, 11.2%);
     --popover: hsl(0, 0%, 100%);
     --popover-foreground: hsl(222.2, 47.4%, 11.2%);
-    --primary: hsl(221.2, 83.2%, 53.3%); /* Azul Marino / Eléctrico moderno */
+    --primary: hsl(221.2, 83.2%, 53.3%); /* Azul Marino / Royal Blue */
     --primary-foreground: hsl(210, 40%, 98%);
-    --secondary: hsl(210, 40%, 96.1%);
+    --secondary: hsl(214, 32%, 93%);
     --secondary-foreground: hsl(222.2, 47.4%, 11.2%);
-    --muted: hsl(214.3, 31.8%, 95.5%);
-    --muted-foreground: hsl(215.4, 16.3%, 46.9%);
-    --accent: hsl(199, 89%, 48%, 0.12); /* Toque sutil de celeste */
+    --muted: hsl(214, 30%, 92.5%);
+    --muted-foreground: hsl(215.4, 20%, 46%);
+    --accent: hsl(199, 89%, 48%, 0.12); /* Acento celeste sutil */
     --accent-foreground: hsl(222.2, 47.4%, 11.2%);
     --destructive: hsl(0, 84.2%, 60.2%);
     --destructive-foreground: hsl(210, 40%, 98%);
-    --border: hsl(214.3, 31.8%, 91.4%); /* Borde con leve tinte azulado */
-    --input: hsl(214.3, 31.8%, 89%);
-    --ring: hsl(221.2, 83.2%, 53.3%);
+    --border: hsl(214, 45%, 83%); /* Borde divisorio nítido en azul marino / celeste */
+    --input: hsl(214, 45%, 84%);
+    --ring: hsl(199, 89%, 48%); /* Ring celeste brillante */
     --chart-1: hsl(221.2, 83.2%, 53.3%);
-    --chart-2: hsl(199, 89%, 48%); /* Celeste */
+    --chart-2: hsl(199, 89%, 48%);
     --chart-3: hsl(197, 37%, 24%);
     --chart-4: hsl(43, 74%, 66%);
     --chart-5: hsl(27, 87%, 67%);
     --radius: 0.875rem; /* 14px bordes modernos y suaves */
-    --sidebar-background: hsl(222.2, 47.4%, 10%); /* Azul Marino Profundo para Sidebar */
-    --sidebar-foreground: hsl(210, 40%, 96.1%);
+    --sidebar-background: hsl(216, 38%, 97%); /* Sidebar con suave tono azul grisáceo premium */
+    --sidebar-foreground: hsl(222, 47%, 18%);
     --sidebar-primary: hsl(199, 89%, 48%);
-    --sidebar-primary-foreground: hsl(222.2, 47.4%, 11.2%);
-    --sidebar-accent: hsl(217.2, 32.6%, 17.5%);
-    --sidebar-accent-foreground: hsl(210, 40%, 98%);
-    --sidebar-border: hsl(217.2, 32.6%, 17.5%);
+    --sidebar-primary-foreground: hsl(0, 0%, 100%);
+    --sidebar-accent: hsl(214, 40%, 92%);
+    --sidebar-accent-foreground: hsl(222.2, 47.4%, 11.2%);
+    --sidebar-border: hsl(214, 45%, 82%); /* División lateral en tono azul marino/celeste */
     --sidebar-ring: hsl(199, 89%, 48%);
 }
 
