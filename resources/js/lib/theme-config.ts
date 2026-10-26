@@ -136,6 +136,18 @@ export const BACKGROUND_THEMES = [
         previewClass: 'bg-zinc-100 dark:bg-zinc-900 border border-zinc-400 dark:border-zinc-700 font-mono text-center'
     },
     {
+        id: 'retro-grid',
+        name: 'Retro Grid 3D (Magic UI)',
+        description: 'Perspectiva 3D animada en movimiento continuo.',
+        previewClass: 'bg-gradient-to-b from-sky-100 to-white dark:from-slate-900 dark:to-zinc-950 border border-sky-400/40 text-sky-600'
+    },
+    {
+        id: 'particles',
+        name: 'Partículas Interactivas (Canvas)',
+        description: 'Constelación de partículas que reaccionan al mouse.',
+        previewClass: 'bg-slate-900 text-sky-300 border border-sky-400/50'
+    },
+    {
         id: 'mesh',
         name: 'Gradiente Mesh Fluido',
         description: 'Degradado suave con micro-textura que resalta productos.',

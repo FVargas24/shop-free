@@ -1,6 +1,8 @@
 import React from 'react';
+import { RetroGrid } from '@/components/ui/retro-grid';
+import { Particles } from '@/components/ui/particles';
 
-export type BackgroundStyle = 'clean' | 'dots' | 'grid' | 'cross-grid' | 'aurora' | 'mesh' | 'beams' | 'wave';
+export type BackgroundStyle = 'clean' | 'dots' | 'grid' | 'cross-grid' | 'retro-grid' | 'particles' | 'aurora' | 'mesh' | 'beams' | 'wave';
 
 interface BackgroundPatternProps {
     variant?: BackgroundStyle | string;
@@ -65,6 +67,20 @@ export function BackgroundPattern({ variant = 'dots', className = '', children, 
                         }}
                     />
                     <div className="absolute inset-0 bg-radial from-transparent via-background/40 to-background pointer-events-none" />
+                </div>
+            )}
+
+            {/* 4. RETRO GRID ANIMADO (MAGIC UI) */}
+            {variant === 'retro-grid' && (
+                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-background overflow-hidden`}>
+                    <RetroGrid angle={65} cellSize={50} opacity={0.6} />
+                </div>
+            )}
+
+            {/* 5. PARTICLES INTERACTIVAS (MAGIC UI) */}
+            {variant === 'particles' && (
+                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-background overflow-hidden`}>
+                    <Particles quantity={60} ease={80} size={0.6} color="#0284c7" className="inset-0" />
                 </div>
             )}
 
