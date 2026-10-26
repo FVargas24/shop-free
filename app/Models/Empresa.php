@@ -13,6 +13,8 @@ class Empresa extends Model
         'slug',
         'celular',
         'tipo',
+        'activo',
+        'fecha_expiracion',
         'tema_color',
         'fondo_estilo',
         'tipografia',
@@ -35,6 +37,11 @@ class Empresa extends Model
                     $slug = $originalSlug . '-' . $count++;
                 }
                 $empresa->slug = $slug;
+            }
+
+            if (empty($empresa->fecha_expiracion)) {
+                // 1 mes gratis por defecto
+                $empresa->fecha_expiracion = now()->addMonth();
             }
         });
     }

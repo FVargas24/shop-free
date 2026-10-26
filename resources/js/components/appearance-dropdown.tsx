@@ -7,41 +7,31 @@ import { HTMLAttributes } from 'react';
 export default function AppearanceToggleDropdown({ className = '', ...props }: HTMLAttributes<HTMLDivElement>) {
     const { appearance, updateAppearance } = useAppearance();
 
-    const getCurrentIcon = () => {
-        switch (appearance) {
-            case 'dark':
-                return <Moon className="h-5 w-5" />;
-            case 'light':
-                return <Sun className="h-5 w-5" />;
-            default:
-                return <Monitor className="h-5 w-5" />;
-        }
+    // Instant toggle between light and dark with 1 single click
+    const toggleTheme = () => {
+        const isDark = document.documentElement.classList.contains('dark') || appearance === 'dark';
+        const nextMode = isDark ? 'light' : 'dark';
+        updateAppearance(nextMode);
     };
+
+    const isDark = appearance === 'dark' || (appearance === 'system' && typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
     return (
         <div className={className} {...props}>
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-9 w-9 rounded-md">
-                        {getCurrentIcon()}
-                        <span className="sr-only">Toggle theme</span>
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => updateAppearance('light')}>
-                        <span className="flex items-center gap-2">
-                            <Sun className="h-5 w-5" />
-                            Claro
-                        </span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => updateAppearance('dark')}>
-                        <span className="flex items-center gap-2">
-                            <Moon className="h-5 w-5" />
-                            Oscuro
-                        </span>
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleTheme}
+                title={isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+                className="h-9 w-9 rounded-xl border border-border/80 hover:bg-sky-50 dark:hover:bg-sky-950/40 text-foreground transition-all duration-200"
+            >
+                {isDark ? (
+                    <Sun className="h-4 w-4 text-amber-400 transition-transform duration-300 rotate-0 hover:rotate-90" />
+                ) : (
+                    <Moon className="h-4 w-4 text-sky-600 transition-transform duration-300 rotate-0 hover:-rotate-12" />
+                )}
+                <span className="sr-only">Cambiar tema</span>
+            </Button>
         </div>
     );
 }

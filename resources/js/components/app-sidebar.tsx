@@ -2,16 +2,24 @@ import { NavMain } from '@/components/nav-main';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { BadgeDollarSign, BarChart3, BookOpenCheck, BotMessageSquare, Boxes, ExternalLink, Globe, LayoutGrid, Package, Sparkles, Store, Wallet } from 'lucide-react';
+import { BadgeDollarSign, BarChart3, BookOpenCheck, BotMessageSquare, Boxes, ExternalLink, Globe, LayoutGrid, Package, Shield, Sparkles, Store, Users, Wallet } from 'lucide-react';
 import AppLogo from './app-logo';
 
 // mainNavItems should be moved or redefined within AppSidebar to access props
 
 export function AppSidebar() {
-    const { tenant } = usePage().props as any;
+    const { tenant, auth } = usePage().props as any;
     const slug = tenant?.slug || '';
+    const isAdmin = auth?.user?.role === 'admin';
 
     const mainNavItems: NavItem[] = [
+        ...(isAdmin ? [
+            {
+                title: 'Panel Super Admin',
+                url: '/admin/empresas',
+                icon: Shield,
+            }
+        ] : []),
         {
             title: 'Dashboard',
             url: `/${slug}/dashboard`,

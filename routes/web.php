@@ -15,14 +15,28 @@ Route::get('/', function () {
     return redirect('/login');
 })->name('home');
 
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/empresas', [\App\Http\Controllers\AdminEmpresasController::class, 'index'])->name('admin.empresas.index');
+    Route::post('/empresas/{empresa}/toggle-status', [\App\Http\Controllers\AdminEmpresasController::class, 'toggleStatus'])->name('admin.empresas.toggle');
+    Route::post('/empresas/{empresa}/extend-trial', [\App\Http\Controllers\AdminEmpresasController::class, 'extendTrial'])->name('admin.empresas.extend');
+});
+
 Route::prefix('{empresa}')->group(function () {
     Route::get('/', function () {
         $tenant = app('tenant');
+        
+        // Verificar si la empresa está activa o expirada
+        $isExpired = false;
+        if ($tenant) {
+            $isExpired = !$tenant->activo || ($tenant->fecha_expiracion && \Carbon\Carbon::parse($tenant->fecha_expiracion)->isPast());
+        }
+
         $productos = $tenant ? $tenant->productos()->latest()->get() : \App\Models\Producto::all();
 
         return Inertia::render('welcome', [
             'productos' => $productos,
-            'empresa' => $tenant
+            'empresa' => $tenant,
+            'isExpired' => $isExpired,
         ]);
     })->name('catalog.show');
 

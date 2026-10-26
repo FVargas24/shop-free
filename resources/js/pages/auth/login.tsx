@@ -48,11 +48,11 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 </div>
             )}
 
-            <form className="flex flex-col gap-6" onSubmit={submit}>
-                <div className="grid gap-6">
-                    <div className="grid gap-2">
-                        <Label htmlFor="email" className="flex items-center gap-2">
-                            <Mail className="h-4 w-4 opacity-70" /> Correo Electrónico
+            <form className="flex flex-col gap-5" onSubmit={submit}>
+                <div className="grid gap-4">
+                    <div className="grid gap-1.5">
+                        <Label htmlFor="email" className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                            <Mail className="h-3.5 w-3.5 text-sky-500" /> Correo Electrónico
                         </Label>
                         <Input
                             id="email"
@@ -63,24 +63,24 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             autoComplete="email"
                             value={data.email}
                             onChange={(e) => setData('email', e.target.value)}
-                            placeholder="correo@ejemplo.com"
-                            className="h-11"
+                            placeholder="tunegocio@ejemplo.com"
+                            className="h-11 rounded-xl text-xs bg-background/80 border-border/80 focus-visible:ring-sky-500"
                         />
                         <InputError message={errors.email} />
                     </div>
 
-                    <div className="grid gap-2">
+                    <div className="grid gap-1.5">
                         <div className="flex items-center justify-between">
-                            <Label htmlFor="password" className="flex items-center gap-2">
-                                <Lock className="h-4 w-4 opacity-70" /> Contraseña
+                            <Label htmlFor="password" className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                                <Lock className="h-3.5 w-3.5 text-sky-500" /> Contraseña
                             </Label>
                             {canResetPassword && (
                                 <Link 
                                     href={route('password.request')} 
-                                    className="text-sm font-medium text-primary hover:underline underline-offset-4" 
+                                    className="text-xs font-semibold text-sky-600 dark:text-sky-400 hover:underline" 
                                     tabIndex={5}
                                 >
-                                    ¿Olvidaste tu contraseña?
+                                    ¿Olvidaste tu clave?
                                 </Link>
                             )}
                         </div>
@@ -93,38 +93,50 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             placeholder="••••••••"
-                            className="h-11"
+                            className="h-11 rounded-xl text-xs bg-background/80 border-border/80 focus-visible:ring-sky-500"
                         />
                         <InputError message={errors.password} />
                     </div>
 
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center space-x-2 py-1">
                         <Checkbox 
                             id="remember" 
                             name="remember" 
                             tabIndex={3} 
                             checked={data.remember}
                             onCheckedChange={(checked) => setData('remember', checked as boolean)}
+                            className="rounded-md border-border/80 data-[state=checked]:bg-sky-600 data-[state=checked]:border-sky-600"
                         />
-                        <Label htmlFor="remember" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer">
+                        <Label htmlFor="remember" className="text-xs font-medium text-muted-foreground cursor-pointer select-none">
                             Mantener sesión iniciada
                         </Label>
                     </div>
 
-                    <Button type="submit" className="mt-2 w-full h-11 text-base shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]" tabIndex={4} disabled={processing}>
-                        {processing && <LoaderCircle className="h-4 w-4 animate-spin mr-2" />}
-                        Ingresar al sistema
+                    <Button 
+                        type="submit" 
+                        className="mt-2 w-full h-11 text-xs font-bold rounded-xl bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white shadow-lg shadow-blue-500/20 transition-all active:scale-98 cursor-pointer" 
+                        tabIndex={4} 
+                        disabled={processing}
+                    >
+                        {processing ? (
+                            <>
+                                <LoaderCircle className="h-4 w-4 animate-spin mr-2" />
+                                Ingresando...
+                            </>
+                        ) : (
+                            'Ingresar a mi Catálogo'
+                        )}
                     </Button>
                 </div>
 
-                <div className="text-muted-foreground text-center text-sm">
+                <div className="text-muted-foreground text-center text-xs pt-2 border-t border-border/60">
                     ¿No tienes una cuenta aún?{' '}
                     <Link 
                         href={route('register')} 
-                        className="font-semibold text-primary underline-offset-4 hover:underline" 
+                        className="font-bold text-sky-600 dark:text-sky-400 hover:underline" 
                         tabIndex={5}
                     >
-                        Regístrate gratis
+                        Crear tienda gratis
                     </Link>
                 </div>
             </form>

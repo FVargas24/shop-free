@@ -66,6 +66,38 @@ export function BackgroundPattern({ variant = 'dots', className = '', children, 
                 </div>
             )}
 
+            {variant === 'cyber-circuit' && (
+                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-[#070D1F]`}>
+                    <div 
+                        className="absolute inset-0 opacity-[0.25]"
+                        style={{
+                            backgroundImage: `
+                                linear-gradient(to right, rgba(56, 189, 248, 0.25) 1px, transparent 1px),
+                                linear-gradient(to bottom, rgba(56, 189, 248, 0.25) 1px, transparent 1px)
+                            `,
+                            backgroundSize: '36px 36px',
+                        }}
+                    />
+                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-500/15 rounded-full blur-[100px]" />
+                    <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/15 rounded-full blur-[120px]" />
+                </div>
+            )}
+
+            {variant === 'midnight-glass' && (
+                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-slate-950`}>
+                    <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-blue-600/20 blur-[130px]" />
+                    <div className="absolute top-1/3 -right-40 w-[450px] h-[450px] rounded-full bg-sky-400/15 blur-[140px]" />
+                    <div className="absolute -bottom-40 left-1/3 w-[500px] h-[500px] rounded-full bg-indigo-600/15 blur-[150px]" />
+                    <div 
+                        className="absolute inset-0 opacity-[0.15]"
+                        style={{
+                            backgroundImage: 'radial-gradient(circle at 1px 1px, #38bdf8 1px, transparent 0)',
+                            backgroundSize: '28px 28px'
+                        }}
+                    />
+                </div>
+            )}
+
             {variant === 'dark-slate' && (
                 <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-zinc-950 text-zinc-100`}>
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]" />

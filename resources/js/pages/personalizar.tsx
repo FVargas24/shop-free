@@ -274,12 +274,12 @@ export default function Personalizar({ empresa, productosMuestra }: Props) {
                 </div>
 
                 {/* PANEL DERECHO: VISTA PREVIA INTERACTIVA EN TIEMPO REAL */}
-                <div className="flex-1 bg-zinc-100 dark:bg-zinc-950 flex flex-col p-4 md:p-8 overflow-hidden">
+                <div className="flex-1 bg-slate-100/90 dark:bg-[#070D1F] flex flex-col p-4 md:p-8 overflow-hidden border-l border-border/80">
                     {/* Header de la Vista Previa */}
                     <div className="flex items-center justify-between pb-4">
                         <div className="flex items-center gap-2">
-                            <Badge variant="outline" className="bg-background shadow-2xs gap-1.5 font-medium text-xs">
-                                <Eye className="h-3.5 w-3.5 text-primary" />
+                            <Badge variant="outline" className="bg-card shadow-2xs gap-1.5 font-bold text-xs py-1 px-3 border-sky-300 dark:border-sky-800 text-sky-700 dark:text-sky-300">
+                                <Eye className="h-3.5 w-3.5" />
                                 Vista Previa en Vivo
                             </Badge>
                             <span className="text-xs text-muted-foreground hidden sm:inline">
@@ -288,12 +288,12 @@ export default function Personalizar({ empresa, productosMuestra }: Props) {
                         </div>
 
                         {/* Switch Dispositivo */}
-                        <div className="flex items-center bg-background border rounded-lg p-0.5 shadow-2xs">
+                        <div className="flex items-center bg-card border rounded-xl p-1 shadow-xs border-border/80">
                             <button
                                 type="button"
                                 onClick={() => setPreviewDevice('desktop')}
-                                className={`px-2.5 py-1 text-xs rounded-md font-medium flex items-center gap-1.5 transition-all ${
-                                    previewDevice === 'desktop' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
+                                className={`px-3 py-1 text-xs rounded-lg font-bold flex items-center gap-1.5 transition-all ${
+                                    previewDevice === 'desktop' ? 'bg-primary text-white shadow-xs' : 'text-muted-foreground hover:text-foreground'
                                 }`}
                             >
                                 <Monitor className="h-3.5 w-3.5" /> Escritorio
@@ -301,8 +301,8 @@ export default function Personalizar({ empresa, productosMuestra }: Props) {
                             <button
                                 type="button"
                                 onClick={() => setPreviewDevice('mobile')}
-                                className={`px-2.5 py-1 text-xs rounded-md font-medium flex items-center gap-1.5 transition-all ${
-                                    previewDevice === 'mobile' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'
+                                className={`px-3 py-1 text-xs rounded-lg font-bold flex items-center gap-1.5 transition-all ${
+                                    previewDevice === 'mobile' ? 'bg-primary text-white shadow-xs' : 'text-muted-foreground hover:text-foreground'
                                 }`}
                             >
                                 <Smartphone className="h-3.5 w-3.5" /> Móvil
@@ -313,9 +313,9 @@ export default function Personalizar({ empresa, productosMuestra }: Props) {
                     {/* Contenedor del Mockup */}
                     <div className="flex-1 flex items-center justify-center overflow-auto p-2">
                         <div 
-                            className={`transition-all duration-300 rounded-2xl shadow-2xl border border-border overflow-hidden bg-background ${
+                            className={`transition-all duration-300 rounded-3xl shadow-[0_15px_40px_rgba(0,0,0,0.25)] border-2 border-border/80 dark:border-slate-800 overflow-hidden bg-background relative ${
                                 previewDevice === 'mobile' 
-                                    ? 'w-[375px] h-[720px] max-h-[85vh]' 
+                                    ? 'w-[375px] h-[720px] max-h-[85vh] ring-8 ring-slate-900/10 dark:ring-white/5' 
                                     : 'w-full h-full max-h-[85vh]'
                             }`}
                         >

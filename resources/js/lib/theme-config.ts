@@ -73,19 +73,40 @@ export const FONT_THEMES: Record<string, { id: string; name: string; fontClass: 
         category: 'Fresca & Dinámica',
         description: 'Estilo redondeado, vibrante y cercano para marcas activas.'
     },
+    poppins: {
+        id: 'poppins',
+        name: 'Poppins',
+        fontClass: 'font-[Poppins,sans-serif]',
+        category: 'Geométrica & Enérgica',
+        description: 'Títulos llamativos con una estética moderna e internacional.'
+    },
+    dmsans: {
+        id: 'dmsans',
+        name: 'DM Sans',
+        fontClass: 'font-[\'DM_Sans\',sans-serif]',
+        category: 'Minimalista & Elegante',
+        description: 'Proporciones balanceadas ideales para tiendas boutique.'
+    },
     playfair: {
         id: 'playfair',
         name: 'Playfair Display',
         fontClass: 'font-[\'Playfair_Display\',serif]',
         category: 'Elegante & Boutique',
-        description: 'Tipografía serif sofisticada para moda, joyas y gastronomía gourmet.'
+        description: 'Tipografía serif sofisticada para moda, joyas y gastronomía.'
+    },
+    cinzel: {
+        id: 'cinzel',
+        name: 'Cinzel Royal',
+        fontClass: 'font-[Cinzel,serif]',
+        category: 'Lujo & Distinción',
+        description: 'Acabados clásicos romanos inspirados en marcas de alta gama.'
     },
     jakarta: {
         id: 'jakarta',
         name: 'Plus Jakarta Sans',
         fontClass: 'font-[\'Plus_Jakarta_Sans\',sans-serif]',
         category: 'Corporativa & Premium',
-        description: 'Limpia, geométrica y con alta presencia comercial.'
+        description: 'Limpia, geométrica y con presencia comercial de vanguardia.'
     },
 };
 
@@ -94,36 +115,48 @@ export const BACKGROUND_THEMES = [
         id: 'dots',
         name: 'Malla de Puntos (Dots)',
         description: 'Puntos sutiles estilo Shadcn UI.',
-        previewClass: 'bg-[#f4f4f5] border border-dashed border-zinc-300'
+        previewClass: 'bg-zinc-100 dark:bg-zinc-900 border border-dashed border-zinc-300 dark:border-zinc-700'
     },
     {
         id: 'grid',
         name: 'Retícula Geométrica (Grid)',
         description: 'Líneas arquitectónicas modernas.',
-        previewClass: 'bg-[#f4f4f5] border border-zinc-300'
+        previewClass: 'bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700'
     },
     {
         id: 'aurora',
         name: 'Aurora Boreal (Gradiente)',
         description: 'Luces y resplandores suaves multicolores.',
-        previewClass: 'bg-gradient-to-r from-emerald-100 via-violet-100 to-amber-100'
+        previewClass: 'bg-gradient-to-r from-sky-400/20 via-violet-500/20 to-pink-500/20 border border-sky-300/30'
     },
     {
         id: 'mesh',
         name: 'Malla Texturizada (Mesh)',
         description: 'Degradado neutro con textura suave.',
-        previewClass: 'bg-gradient-to-br from-zinc-100 to-slate-200'
+        previewClass: 'bg-gradient-to-br from-slate-200 to-zinc-300 dark:from-zinc-800 dark:to-zinc-950'
+    },
+    {
+        id: 'cyber-circuit',
+        name: 'Cyber Neon (Circuito)',
+        description: 'Glow cibernético en azul marino y celeste.',
+        previewClass: 'bg-[#0B132B] border border-cyan-400/50 text-cyan-300'
+    },
+    {
+        id: 'midnight-glass',
+        name: 'Midnight Glass (Glow)',
+        description: 'Esferas luminosas en azul noche sobre fondo oscuro.',
+        previewClass: 'bg-slate-950 border border-blue-500/40 text-blue-300'
     },
     {
         id: 'clean',
         name: 'Limpio & Minimalista (Clean)',
-        description: 'Fondo blanco puro, sin distracciones.',
-        previewClass: 'bg-white border border-zinc-200'
+        description: 'Fondo suave sin distracciones.',
+        previewClass: 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800'
     },
     {
         id: 'dark-slate',
         name: 'Oscuro Obsidian (Dark)',
         description: 'Modo oscuro profundo y refinado.',
-        previewClass: 'bg-zinc-950 text-white'
+        previewClass: 'bg-zinc-950 text-white border border-zinc-800'
     }
 ];

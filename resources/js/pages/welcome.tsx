@@ -52,6 +52,7 @@ interface Empresa {
 interface WelcomeProps {
     productos: Producto[];
     empresa: Empresa;
+    isExpired?: boolean;
 }
 
 interface CartItem extends Producto {
@@ -61,12 +62,36 @@ interface CartItem extends Producto {
     cantidad: number;
 }
 
+interface CountryConfig {
+    name: string;
+    code: string;
+    dial: string;
+    flag: string;
+    length: number;
+    validPrefixes?: string[];
+}
+
+const COUNTRIES: CountryConfig[] = [
+    { name: 'Bolivia', code: 'BO', dial: '+591', flag: '🇧🇴', length: 8, validPrefixes: ['5', '6', '7'] },
+    { name: 'Perú', code: 'PE', dial: '+51', flag: '🇵🇪', length: 9, validPrefixes: ['9'] },
+    { name: 'Argentina', code: 'AR', dial: '+54', flag: '🇦🇷', length: 10 },
+    { name: 'Chile', code: 'CL', dial: '+56', flag: '🇨🇱', length: 9 },
+    { name: 'Colombia', code: 'CO', dial: '+57', flag: '🇨🇴', length: 10, validPrefixes: ['3'] },
+    { name: 'Ecuador', code: 'EC', dial: '+593', flag: '🇪🇨', length: 9, validPrefixes: ['9'] },
+    { name: 'México', code: 'MX', dial: '+52', flag: '🇲🇽', length: 10 },
+    { name: 'Paraguay', code: 'PY', dial: '+595', flag: '🇵🇾', length: 9 },
+    { name: 'Uruguay', code: 'UY', dial: '+598', flag: '🇺🇾', length: 8 },
+    { name: 'Brasil', code: 'BR', dial: '+55', flag: '🇧🇷', length: 11 },
+    { name: 'Estados Unidos', code: 'US', dial: '+1', flag: '🇺🇸', length: 10 },
+    { name: 'España', code: 'ES', dial: '+34', flag: '🇪🇸', length: 9 },
+];
+
 const DEPARTAMENTOS_BOLIVIA = [
     'Santa Cruz', 'La Paz', 'Cochabamba', 'Chuquisaca', 
     'Oruro', 'Potosí', 'Tarija', 'Beni', 'Pando'
 ];
 
-export default function Welcome({ productos, empresa }: WelcomeProps) {
+export default function Welcome({ productos, empresa, isExpired = false }: WelcomeProps) {
     const { auth } = usePage<SharedData>().props;
     
     // Configuración visual dinámica elegida por el dueño
@@ -83,6 +108,47 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
     const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
     const [isSuccessOpen, setIsSuccessOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+
+    if (isExpired) {
+        return (
+            <BackgroundPattern variant={backgroundStyle} className={`${currentFont.fontClass} flex min-h-screen items-center justify-center p-6 text-foreground`}>
+                <Head title={`Catálogo Pausado - ${empresa?.nombre_empresa}`} />
+                <div className="max-w-md w-full bg-card/90 backdrop-blur-xl border border-border/80 rounded-3xl p-8 text-center shadow-2xl space-y-5">
+                    <div className="h-16 w-16 rounded-2xl bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto border border-amber-200 dark:border-amber-800">
+                        <Package className="h-8 w-8" />
+                    </div>
+                    <div className="space-y-2">
+                        <Badge variant="outline" className="text-amber-600 border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 font-bold">
+                            Catálogo Temporalmente Pausado
+                        </Badge>
+                        <h2 className="text-2xl font-black tracking-tight">{empresa?.nombre_empresa}</h2>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                            Este catálogo digital ha cumplido su período de prueba o se encuentra pausado por el administrador.
+                        </p>
+                    </div>
+
+                    {empresa?.celular && (
+                        <div className="pt-2">
+                            <a
+                                href={`https://wa.me/${empresa.celular.replace(/\D/g, '')}?text=Hola,%20vi%20tu%20cat%C3%A1logo%20en%20l%C3%ADnea.`}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl font-bold text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-md transition-all"
+                            >
+                                <Phone className="h-4 w-4" />
+                                Contactar al Comercio por WhatsApp
+                            </a>
+                        </div>
+                    )}
+
+                    <div className="pt-4 border-t border-border/60 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
+                        <img src="/logo.svg" alt="MiraCode" className="h-4 w-4" />
+                        <span>MiraCode Shop Platform</span>
+                    </div>
+                </div>
+            </BackgroundPattern>
+        );
+    }
     
     // Búsqueda y Filtros en tiempo real
     const [searchQuery, setSearchQuery] = useState('');
@@ -170,6 +236,13 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
     const cartTotal = cart.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
     const cartCount = cart.reduce((acc, item) => acc + item.cantidad, 0);
 
+    // Estados para selector de país y validación de celular
+    const [selectedCountry, setSelectedCountry] = useState<CountryConfig>(COUNTRIES[0]);
+    const [countrySearch, setCountrySearch] = useState('');
+    const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+    const [phoneRaw, setPhoneRaw] = useState('');
+    const [phoneError, setPhoneError] = useState<string | null>(null);
+
     // Formulario de pedido
     const { data, setData, post, processing, reset, errors } = useForm({
         cliente: '',
@@ -179,6 +252,71 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
         items: [] as { id: number; cantidad: number }[],
     });
 
+    // Paises filtrados por búsqueda
+    const filteredCountries = useMemo(() => {
+        if (!countrySearch.trim()) return COUNTRIES;
+        const q = countrySearch.toLowerCase();
+        return COUNTRIES.filter(c => c.name.toLowerCase().includes(q) || c.dial.includes(q) || c.code.toLowerCase().includes(q));
+    }, [countrySearch]);
+
+    // Validador de celular en tiempo real según país
+    const handlePhoneChange = (val: string) => {
+        const cleaned = val.replace(/\D/g, ''); // Solo dígitos
+        const maxLen = selectedCountry.length;
+        const trimmed = cleaned.slice(0, maxLen);
+        setPhoneRaw(trimmed);
+
+        // Validar reglas
+        if (!trimmed) {
+            setPhoneError('Ingresa tu número de celular');
+            setData('celular', '');
+            return;
+        }
+
+        if (selectedCountry.code === 'BO') {
+            // Reglas para Bolivia: debe iniciar con 6, 7 o 5 y tener 8 dígitos
+            const firstDigit = trimmed.charAt(0);
+            if (!['6', '7', '5'].includes(firstDigit)) {
+                setPhoneError('En Bolivia los celulares inician con 6 o 7 (o 5)');
+            } else if (trimmed.length < 8) {
+                setPhoneError(`Faltan ${8 - trimmed.length} dígitos (deben ser 8)`);
+            } else {
+                setPhoneError(null);
+            }
+        } else if (selectedCountry.validPrefixes && selectedCountry.validPrefixes.length > 0) {
+            const firstDigit = trimmed.charAt(0);
+            if (!selectedCountry.validPrefixes.includes(firstDigit)) {
+                setPhoneError(`En ${selectedCountry.name} suele iniciar con ${selectedCountry.validPrefixes.join(', ')}`);
+            } else if (trimmed.length < selectedCountry.length) {
+                setPhoneError(`Faltan ${selectedCountry.length - trimmed.length} dígitos`);
+            } else {
+                setPhoneError(null);
+            }
+        } else {
+            if (trimmed.length < selectedCountry.length) {
+                setPhoneError(`Faltan ${selectedCountry.length - trimmed.length} dígitos`);
+            } else {
+                setPhoneError(null);
+            }
+        }
+
+        setData('celular', `${selectedCountry.dial} ${trimmed}`);
+    };
+
+    // Cambiar país seleccionado
+    const handleSelectCountry = (country: CountryConfig) => {
+        setSelectedCountry(country);
+        setData('pais', country.name);
+        setIsCountryDropdownOpen(false);
+        setCountrySearch('');
+        // Re-evaluar teléfono actual
+        if (phoneRaw) {
+            const trimmed = phoneRaw.slice(0, country.length);
+            setPhoneRaw(trimmed);
+            setData('celular', `${country.dial} ${trimmed}`);
+        }
+    };
+
     useEffect(() => {
         const items = cart.map(item => ({ id: item.id, cantidad: item.cantidad }));
         setData('items', items);
@@ -186,6 +324,20 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
 
     const handleCheckout = (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Validar celular antes de enviar
+        if (!phoneRaw || phoneRaw.length < selectedCountry.length) {
+            setPhoneError(`El número debe tener ${selectedCountry.length} dígitos.`);
+            return;
+        }
+
+        if (selectedCountry.code === 'BO') {
+            const firstDigit = phoneRaw.charAt(0);
+            if (!['6', '7', '5'].includes(firstDigit)) {
+                setPhoneError('En Bolivia los celulares deben iniciar con 6 o 7 (o 5)');
+                return;
+            }
+        }
         
         post(route('pedidos.store', { empresa: empresa.slug }), {
             onSuccess: () => {
@@ -234,6 +386,29 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
         <BackgroundPattern variant={backgroundStyle} className={`${currentFont.fontClass} text-foreground antialiased selection:bg-primary/20`}>
             <Head title={`Catálogo - ${empresa?.nombre_empresa}`} />
             
+            {/* BANNER PROMOCIONAL SUPERIOR: "¿QUIERES TU TIENDA GRATIS?" */}
+            <div className="bg-gradient-to-r from-sky-600 via-blue-700 to-indigo-800 text-white text-xs py-2 px-4 shadow-sm relative z-50">
+                <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center sm:text-left">
+                    <div className="flex items-center gap-2 justify-center">
+                        <span className="flex h-2 w-2 rounded-full bg-amber-400 animate-ping" />
+                        <span className="font-medium text-sky-100">
+                            ¿Quieres tener tu propia tienda virtual y catálogo digital como este?
+                        </span>
+                        <span className="hidden md:inline-block font-extrabold text-amber-300">
+                            ¡Totalmente Gratis!
+                        </span>
+                    </div>
+                    <Link
+                        href="/register"
+                        className="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-white text-blue-900 font-black text-[11px] shadow-sm hover:bg-amber-300 hover:text-blue-950 transition-all hover:scale-105 shrink-0"
+                    >
+                        <Sparkles className="h-3 w-3 text-amber-500" />
+                        <span>CREAR MI TIENDA GRATIS</span>
+                        <ChevronRight className="h-3 w-3" />
+                    </Link>
+                </div>
+            </div>
+
             {/* BARRA SUPERIOR / NAVBAR */}
             <header className={`sticky top-0 z-40 w-full transition-all duration-300 ${
                 scrolled 
@@ -773,44 +948,135 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
                         </DialogHeader>
 
                         <div className="space-y-3 py-2">
-                            <div className="grid gap-1">
-                                <Label htmlFor="cliente" className="text-xs font-semibold">Tu Nombre Completo *</Label>
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="cliente" className="text-xs font-semibold flex items-center justify-between">
+                                    <span>Tu Nombre Completo *</span>
+                                    <span className="text-[10px] text-muted-foreground font-normal">Se guardará en MAYÚSCULAS</span>
+                                </Label>
                                 <Input
                                     id="cliente"
                                     value={data.cliente}
-                                    onChange={(e) => setData('cliente', e.target.value)}
-                                    placeholder="Ej: Ronald Miranda"
+                                    onChange={(e) => setData('cliente', e.target.value.toUpperCase())}
+                                    placeholder="EJ: RONALD MIRANDA FLORES"
                                     required
-                                    className="h-10 text-xs rounded-xl"
+                                    className="h-10 text-xs rounded-xl uppercase font-semibold tracking-wide"
                                 />
                                 {errors.cliente && <p className="text-[11px] text-destructive">{errors.cliente}</p>}
                             </div>
 
-                            <div className="grid gap-1">
-                                <Label htmlFor="celular" className="text-xs font-semibold">Tu Número de Celular / WhatsApp *</Label>
-                                <Input
-                                    id="celular"
-                                    value={data.celular}
-                                    onChange={(e) => setData('celular', e.target.value)}
-                                    placeholder="Ej: 71234567"
-                                    required
-                                    className="h-10 text-xs rounded-xl"
-                                />
+                            {/* CELULAR CON SELECTOR DE PAÍS + BUSCADOR */}
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="celular" className="text-xs font-semibold flex items-center justify-between">
+                                    <span>Número de Celular / WhatsApp *</span>
+                                    <span className="text-[10px] font-mono font-medium text-primary">
+                                        {phoneRaw.length}/{selectedCountry.length} dígitos
+                                    </span>
+                                </Label>
+                                
+                                <div className="relative">
+                                    <div className="flex gap-2">
+                                        {/* Selector de país */}
+                                        <div className="relative">
+                                            <button
+                                                type="button"
+                                                onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+                                                className="h-10 px-3 rounded-xl border border-input bg-card/80 hover:bg-muted/80 flex items-center gap-1.5 text-xs font-semibold shadow-2xs transition-colors shrink-0"
+                                            >
+                                                <span className="text-base leading-none">{selectedCountry.flag}</span>
+                                                <span className="font-mono text-muted-foreground">{selectedCountry.dial}</span>
+                                                <ChevronRight className={`h-3 w-3 text-muted-foreground transition-transform ${isCountryDropdownOpen ? 'rotate-90' : ''}`} />
+                                            </button>
+
+                                            {/* Dropdown de países con buscador */}
+                                            {isCountryDropdownOpen && (
+                                                <div className="absolute left-0 bottom-full mb-1 z-50 w-72 max-h-64 rounded-xl border border-border bg-popover/95 backdrop-blur-md shadow-xl flex flex-col overflow-hidden animate-in fade-in-50 zoom-in-95">
+                                                    <div className="p-2 border-b bg-muted/30">
+                                                        <div className="relative">
+                                                            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+                                                            <input
+                                                                type="text"
+                                                                value={countrySearch}
+                                                                onChange={(e) => setCountrySearch(e.target.value)}
+                                                                placeholder="Buscar país o código..."
+                                                                className="w-full pl-8 pr-2 py-1.5 text-xs rounded-lg bg-background border border-border focus:outline-none focus:ring-1 focus:ring-primary"
+                                                                autoFocus
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="overflow-y-auto max-h-52 divide-y divide-border/40">
+                                                        {filteredCountries.map((c) => (
+                                                            <button
+                                                                key={c.code}
+                                                                type="button"
+                                                                onClick={() => handleSelectCountry(c)}
+                                                                className={`w-full px-3 py-2 text-left text-xs flex items-center justify-between hover:bg-accent hover:text-accent-foreground transition-colors ${
+                                                                    selectedCountry.code === c.code ? 'bg-primary/10 text-primary font-bold' : ''
+                                                                }`}
+                                                            >
+                                                                <div className="flex items-center gap-2">
+                                                                    <span className="text-base leading-none">{c.flag}</span>
+                                                                    <span>{c.name}</span>
+                                                                </div>
+                                                                <span className="font-mono text-[11px] text-muted-foreground font-semibold">{c.dial}</span>
+                                                            </button>
+                                                        ))}
+                                                        {filteredCountries.length === 0 && (
+                                                            <div className="p-4 text-center text-xs text-muted-foreground">
+                                                                No se encontró el país
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        {/* Input de número */}
+                                        <div className="relative flex-1">
+                                            <Input
+                                                id="celular"
+                                                type="tel"
+                                                inputMode="numeric"
+                                                value={phoneRaw}
+                                                onChange={(e) => handlePhoneChange(e.target.value)}
+                                                placeholder={selectedCountry.code === 'BO' ? 'Ej: 71234567 o 60012345' : 'Número de celular'}
+                                                maxLength={selectedCountry.length}
+                                                required
+                                                className={`h-10 text-xs rounded-xl font-mono tracking-wider font-semibold ${
+                                                    phoneError ? 'border-destructive focus-visible:ring-destructive' : ''
+                                                }`}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {/* Indicador de Validación */}
+                                    {phoneError ? (
+                                        <p className="text-[11px] text-destructive mt-1 flex items-center gap-1 font-medium">
+                                            <span className="h-1.5 w-1.5 rounded-full bg-destructive inline-block" />
+                                            {phoneError}
+                                        </p>
+                                    ) : phoneRaw.length === selectedCountry.length ? (
+                                        <p className="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1 flex items-center gap-1 font-medium">
+                                            <CheckCircle2 className="h-3 w-3" />
+                                            Número válido ({selectedCountry.name})
+                                        </p>
+                                    ) : null}
+                                </div>
                                 {errors.celular && <p className="text-[11px] text-destructive">{errors.celular}</p>}
                             </div>
 
-                            <div className="grid gap-1">
+                            <div className="grid gap-1.5">
                                 <Label htmlFor="departamento" className="text-xs font-semibold">Ciudad / Departamento *</Label>
                                 <select
                                     id="departamento"
                                     value={data.departamento}
                                     onChange={(e) => setData('departamento', e.target.value)}
-                                    className="h-10 px-3 text-xs rounded-xl border border-input bg-background"
+                                    className="h-10 px-3 text-xs rounded-xl border border-input bg-background font-medium focus:ring-1 focus:ring-primary"
                                     required
                                 >
                                     {DEPARTAMENTOS_BOLIVIA.map(dep => (
                                         <option key={dep} value={dep}>{dep}</option>
                                     ))}
+                                    <option value="Otro">Otro / Fuera de Bolivia</option>
                                 </select>
                             </div>
 
@@ -836,7 +1102,7 @@ export default function Welcome({ productos, empresa }: WelcomeProps) {
                             </Button>
                             <Button 
                                 type="submit" 
-                                disabled={processing} 
+                                disabled={processing || !data.cliente.trim() || !phoneRaw || phoneRaw.length < selectedCountry.length || !!phoneError} 
                                 className="font-bold text-xs rounded-xl shadow-md gap-2"
                                 style={{ backgroundColor: currentTheme.bgHex }}
                             >

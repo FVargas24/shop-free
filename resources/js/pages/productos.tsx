@@ -210,10 +210,23 @@ export default function Productos({ productos }: Props) {
         }
     };
 
-    const handleDeleteProduct = (producto: Producto) => {
-        if (confirm(`¿Estás seguro de eliminar "${producto.nombre}"?`)) {
-            router.delete(route('productos.destroy', { empresa: slug, producto: producto.id }));
-        }
+    // Modal confirmación eliminar
+    const [productToDelete, setProductToDelete] = useState<Producto | null>(null);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const openConfirmDelete = (producto: Producto) => {
+        setProductToDelete(producto);
+    };
+
+    const confirmDeleteAction = () => {
+        if (!productToDelete) return;
+        setIsDeleting(true);
+        router.delete(route('productos.destroy', { empresa: slug, producto: productToDelete.id }), {
+            onFinish: () => {
+                setIsDeleting(false);
+                setProductToDelete(null);
+            }
+        });
     };
 
     const emptyCards = Array.from({ length: Math.max(0, 6 - productos.length) });
@@ -700,8 +713,8 @@ export default function Productos({ productos }: Props) {
                                 <Button 
                                     variant="ghost" 
                                     size="sm" 
-                                    className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 px-2.5 rounded-xl"
-                                    onClick={() => handleDeleteProduct(producto)}
+                                    className="text-destructive hover:text-destructive hover:bg-destructive/10 h-8 px-2.5 rounded-xl cursor-pointer"
+                                    onClick={() => openConfirmDelete(producto)}
                                     title="Eliminar producto"
                                 >
                                     <Trash2 className="h-3.5 w-3.5" />
@@ -725,6 +738,46 @@ export default function Productos({ productos }: Props) {
                     ))}
                 </div>
             </div>
+
+            {/* MODAL DIALOG CONFIRMAR ELIMINACIÓN */}
+            <Dialog open={!!productToDelete} onOpenChange={(isOpen) => !isOpen && setProductToDelete(null)}>
+                <DialogContent className="sm:max-w-[420px] rounded-2xl p-6 border border-border shadow-2xl">
+                    <div className="flex flex-col items-center text-center space-y-4">
+                        <div className="h-14 w-14 rounded-full bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center border border-red-200 dark:border-red-900">
+                            <Trash2 className="h-7 w-7" />
+                        </div>
+                        <div className="space-y-1.5">
+                            <DialogTitle className="text-xl font-bold tracking-tight text-foreground">
+                                ¿Eliminar este producto?
+                            </DialogTitle>
+                            <DialogDescription className="text-sm text-muted-foreground">
+                                Estás a punto de eliminar <span className="font-bold text-foreground">"{productToDelete?.nombre}"</span>. Esta acción no se puede deshacer.
+                            </DialogDescription>
+                        </div>
+
+                        <div className="flex items-center gap-3 w-full pt-2">
+                            <Button 
+                                type="button" 
+                                variant="outline" 
+                                className="flex-1 rounded-xl h-10 font-medium"
+                                onClick={() => setProductToDelete(null)}
+                                disabled={isDeleting}
+                            >
+                                Cancelar
+                            </Button>
+                            <Button 
+                                type="button" 
+                                variant="destructive" 
+                                className="flex-1 rounded-xl h-10 font-bold bg-red-600 hover:bg-red-700 text-white"
+                                onClick={confirmDeleteAction}
+                                disabled={isDeleting}
+                            >
+                                {isDeleting ? 'Eliminando...' : 'Sí, eliminar'}
+                            </Button>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </AppLayout>
     );
 }
