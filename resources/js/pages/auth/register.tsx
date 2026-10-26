@@ -11,7 +11,8 @@ import {
     ChevronLeft, 
     CheckCircle2, 
     Check, 
-    Eye 
+    Eye,
+    EyeOff
 } from 'lucide-react';
 import { FormEventHandler, useState, useEffect } from 'react';
 
@@ -76,6 +77,8 @@ export default function Register() {
     const [step, setStep] = useState(1);
     const [isSuccessOpen, setIsSuccessOpen] = useState(false);
     const [isSimulatingLoad, setIsSimulatingLoad] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
     // Selector de país y celular
     const [selectedCountry, setSelectedCountry] = useState<CountryConfig>(COUNTRIES[0]);
@@ -456,16 +459,27 @@ export default function Register() {
                                 <Label htmlFor="password" title="Mínimo 8 caracteres" className="flex items-center gap-1.5 font-bold text-xs text-foreground">
                                     <Lock className="h-4 w-4 text-sky-600" /> Contraseña *
                                 </Label>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    required
-                                    value={data.password}
-                                    onChange={(e) => setData('password', e.target.value)}
-                                    disabled={processing}
-                                    placeholder="••••••••"
-                                    className="h-11 rounded-xl text-xs shadow-2xs"
-                                />
+                                <div className="relative">
+                                    <Input
+                                        id="password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        required
+                                        value={data.password}
+                                        onChange={(e) => setData('password', e.target.value)}
+                                        disabled={processing}
+                                        placeholder="••••••••"
+                                        className="h-11 rounded-xl text-xs pr-9 shadow-2xs"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
+                                        tabIndex={-1}
+                                        title={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                                    >
+                                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                    </button>
+                                </div>
                                 <InputError message={errors.password} />
                             </div>
 
@@ -473,16 +487,27 @@ export default function Register() {
                                 <Label htmlFor="password_confirmation" className="flex items-center gap-1.5 font-bold text-xs text-foreground">
                                     <Lock className="h-4 w-4 text-sky-600" /> Confirmar *
                                 </Label>
-                                <Input
-                                    id="password_confirmation"
-                                    type="password"
-                                    required
-                                    value={data.password_confirmation}
-                                    onChange={(e) => setData('password_confirmation', e.target.value)}
-                                    disabled={processing}
-                                    placeholder="••••••••"
-                                    className="h-11 rounded-xl text-xs shadow-2xs"
-                                />
+                                <div className="relative">
+                                    <Input
+                                        id="password_confirmation"
+                                        type={showPasswordConfirm ? 'text' : 'password'}
+                                        required
+                                        value={data.password_confirmation}
+                                        onChange={(e) => setData('password_confirmation', e.target.value)}
+                                        disabled={processing}
+                                        placeholder="••••••••"
+                                        className="h-11 rounded-xl text-xs pr-9 shadow-2xs"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
+                                        tabIndex={-1}
+                                        title={showPasswordConfirm ? "Ocultar confirmación" : "Ver confirmación"}
+                                    >
+                                        {showPasswordConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                    </button>
+                                </div>
                                 <InputError message={errors.password_confirmation} />
                             </div>
                         </div>
@@ -501,7 +526,7 @@ export default function Register() {
                                 disabled={!data.name.trim() || !data.email.trim() || !data.password || data.password.length < 8 || data.password !== data.password_confirmation}
                                 className="h-11 rounded-xl font-bold text-xs bg-gradient-to-r from-sky-600 to-blue-700 hover:from-sky-500 hover:to-blue-600 shadow-md shadow-sky-600/20"
                             >
-                                Revisar <ChevronRight className="h-4 w-4 ml-1.5" />
+                                Siguiente <ChevronRight className="h-4 w-4 ml-1.5" />
                             </Button>
                         </div>
                     </div>

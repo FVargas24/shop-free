@@ -1,6 +1,6 @@
 import { Head, useForm, Link } from '@inertiajs/react';
-import { LoaderCircle, Mail, Lock } from 'lucide-react';
-import { FormEventHandler } from 'react';
+import { LoaderCircle, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { FormEventHandler, useState } from 'react';
 
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -22,6 +22,7 @@ interface LoginProps {
 }
 
 export default function Login({ status, canResetPassword }: LoginProps) {
+    const [showPassword, setShowPassword] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm<LoginForm>({
         email: '',
         password: '',
@@ -84,17 +85,28 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                                 </Link>
                             )}
                         </div>
-                        <Input
-                            id="password"
-                            type="password"
-                            required
-                            tabIndex={2}
-                            autoComplete="current-password"
-                            value={data.password}
-                            onChange={(e) => setData('password', e.target.value)}
-                            placeholder="••••••••"
-                            className="h-11 rounded-xl text-xs bg-background/80 border-border/80 focus-visible:ring-sky-500"
-                        />
+                        <div className="relative">
+                            <Input
+                                id="password"
+                                type={showPassword ? 'text' : 'password'}
+                                required
+                                tabIndex={2}
+                                autoComplete="current-password"
+                                value={data.password}
+                                onChange={(e) => setData('password', e.target.value)}
+                                placeholder="••••••••"
+                                className="h-11 rounded-xl text-xs bg-background/80 border-border/80 pr-9 focus-visible:ring-sky-500"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
+                                tabIndex={-1}
+                                title={showPassword ? "Ocultar contraseña" : "Ver contraseña"}
+                            >
+                                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            </button>
+                        </div>
                         <InputError message={errors.password} />
                     </div>
 

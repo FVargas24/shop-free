@@ -16,6 +16,7 @@ import { Separator } from '@/components/ui/separator';
 import { type SharedData } from '@/types';
 import { BackgroundPattern } from '@/components/catalog/background-pattern';
 import { COLOR_THEMES, FONT_THEMES } from '@/lib/theme-config';
+import AppearanceToggleDropdown from '@/components/appearance-dropdown';
 
 interface ColorVariant {
     nombre: string;
@@ -438,6 +439,9 @@ export default function Welcome({ productos, empresa, isExpired = false }: Welco
 
                     {/* Acciones del Header */}
                     <div className="flex items-center gap-2">
+                        {/* Selector de Tema Claro / Oscuro */}
+                        <AppearanceToggleDropdown />
+
                         {empresa?.celular && (
                             <a 
                                 href={`https://wa.me/${empresa.celular.replace(/\D/g, '')}`}
