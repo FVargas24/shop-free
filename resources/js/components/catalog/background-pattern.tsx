@@ -1,6 +1,6 @@
 import React from 'react';
 
-export type BackgroundStyle = 'clean' | 'dots' | 'grid' | 'aurora' | 'mesh' | 'dark-slate';
+export type BackgroundStyle = 'clean' | 'dots' | 'grid' | 'cross-grid' | 'aurora' | 'mesh' | 'beams' | 'wave';
 
 interface BackgroundPatternProps {
     variant?: BackgroundStyle | string;
@@ -14,98 +14,114 @@ export function BackgroundPattern({ variant = 'dots', className = '', children, 
 
     return (
         <div className={`relative ${isMockup ? 'h-full w-full' : 'min-h-screen w-full'} transition-colors duration-500 ${className}`}>
-            {/* Background Renderers */}
+            {/* Background Renderers - 100% Adaptables a Modo Claro y Oscuro */}
+            
+            {/* 1. MALLA DE PUNTOS (DOTS) */}
             {variant === 'dots' && (
-                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-[#fafafa] dark:bg-zinc-950`}>
+                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-background`}>
                     <div 
-                        className="absolute inset-0 opacity-[0.4] dark:opacity-[0.2]"
+                        className="absolute inset-0 opacity-[0.45] dark:opacity-[0.25]"
                         style={{
-                            backgroundImage: `radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)`,
+                            backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)',
                             backgroundSize: '24px 24px',
-                            color: '#94a3b8'
+                            color: 'hsl(var(--muted-foreground))'
                         }}
                     />
-                    <div className="absolute inset-0 bg-radial from-transparent via-background/60 to-background pointer-events-none" />
+                    <div className="absolute inset-0 bg-radial from-transparent via-background/40 to-background pointer-events-none" />
                 </div>
             )}
 
+            {/* 2. RETÍCULA GEOMÉTRICA (GRID) */}
             {variant === 'grid' && (
-                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-[#fafafa] dark:bg-zinc-950`}>
+                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-background`}>
                     <div 
-                        className="absolute inset-0 opacity-[0.35] dark:opacity-[0.18]"
+                        className="absolute inset-0 opacity-[0.35] dark:opacity-[0.20]"
                         style={{
                             backgroundImage: `
                                 linear-gradient(to right, currentColor 1px, transparent 1px),
                                 linear-gradient(to bottom, currentColor 1px, transparent 1px)
                             `,
-                            backgroundSize: '40px 40px',
-                            color: '#94a3b8'
+                            backgroundSize: '36px 36px',
+                            color: 'hsl(var(--border))'
                         }}
                     />
-                    <div className="absolute inset-0 bg-radial from-transparent via-background/50 to-background pointer-events-none" />
+                    <div className="absolute inset-0 bg-radial from-transparent via-background/30 to-background pointer-events-none" />
                 </div>
             )}
 
-            {variant === 'aurora' && (
-                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-[#f8fafc] dark:bg-zinc-950 overflow-hidden`}>
-                    <div className="absolute -top-[20%] -left-[10%] w-[60vw] h-[60vw] rounded-full bg-primary/15 blur-[120px] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
-                    <div className="absolute top-[30%] -right-[10%] w-[50vw] h-[50vw] rounded-full bg-violet-400/15 dark:bg-violet-600/15 blur-[130px] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
-                    <div className="absolute -bottom-[20%] left-[20%] w-[55vw] h-[55vw] rounded-full bg-amber-300/15 dark:bg-amber-500/10 blur-[140px] pointer-events-none" />
-                </div>
-            )}
-
-            {variant === 'mesh' && (
-                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-gradient-to-br from-slate-50 via-zinc-100 to-stone-100 dark:from-zinc-950 dark:via-zinc-900 dark:to-zinc-950`}>
+            {/* 3. CRUCES PLUS (+ GRID SHADCN) */}
+            {variant === 'cross-grid' && (
+                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-background`}>
                     <div 
-                        className="absolute inset-0 opacity-[0.25]"
-                        style={{
-                            backgroundImage: 'radial-gradient(#64748b 0.75px, transparent 0.75px)',
-                            backgroundSize: '16px 16px',
-                        }}
-                    />
-                </div>
-            )}
-
-            {variant === 'cyber-circuit' && (
-                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-[#070D1F]`}>
-                    <div 
-                        className="absolute inset-0 opacity-[0.25]"
+                        className="absolute inset-0 opacity-[0.4] dark:opacity-[0.2]"
                         style={{
                             backgroundImage: `
-                                linear-gradient(to right, rgba(56, 189, 248, 0.25) 1px, transparent 1px),
-                                linear-gradient(to bottom, rgba(56, 189, 248, 0.25) 1px, transparent 1px)
+                                radial-gradient(circle, currentColor 1.5px, transparent 1.5px),
+                                linear-gradient(to right, transparent calc(100% - 1px), currentColor 1px),
+                                linear-gradient(to bottom, transparent calc(100% - 1px), currentColor 1px)
                             `,
-                            backgroundSize: '36px 36px',
+                            backgroundSize: '40px 40px',
+                            color: 'hsl(var(--border))'
                         }}
                     />
-                    <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky-500/15 rounded-full blur-[100px]" />
-                    <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-600/15 rounded-full blur-[120px]" />
+                    <div className="absolute inset-0 bg-radial from-transparent via-background/40 to-background pointer-events-none" />
                 </div>
             )}
 
-            {variant === 'midnight-glass' && (
-                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-slate-950`}>
-                    <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-blue-600/20 blur-[130px]" />
-                    <div className="absolute top-1/3 -right-40 w-[450px] h-[450px] rounded-full bg-sky-400/15 blur-[140px]" />
-                    <div className="absolute -bottom-40 left-1/3 w-[500px] h-[500px] rounded-full bg-indigo-600/15 blur-[150px]" />
+            {/* 4. AURORA BOREAL (Luz y Sombra Adaptable) */}
+            {variant === 'aurora' && (
+                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-background overflow-hidden`}>
+                    <div className="absolute -top-[15%] -left-[10%] w-[55vw] h-[55vw] rounded-full bg-sky-400/20 dark:bg-sky-500/15 blur-[120px] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
+                    <div className="absolute top-[25%] -right-[10%] w-[50vw] h-[50vw] rounded-full bg-violet-400/20 dark:bg-violet-600/15 blur-[130px] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
+                    <div className="absolute -bottom-[20%] left-[20%] w-[55vw] h-[55vw] rounded-full bg-rose-300/20 dark:bg-pink-600/15 blur-[140px] mix-blend-multiply dark:mix-blend-screen pointer-events-none" />
+                </div>
+            )}
+
+            {/* 5. GRADIENTE MESH FLUIDO */}
+            {variant === 'mesh' && (
+                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-gradient-to-br from-slate-100/80 via-background to-sky-50/50 dark:from-zinc-950 dark:via-background dark:to-slate-950/80`}>
                     <div 
-                        className="absolute inset-0 opacity-[0.15]"
+                        className="absolute inset-0 opacity-[0.3] dark:opacity-[0.15]"
                         style={{
-                            backgroundImage: 'radial-gradient(circle at 1px 1px, #38bdf8 1px, transparent 0)',
-                            backgroundSize: '28px 28px'
+                            backgroundImage: 'radial-gradient(currentColor 0.75px, transparent 0.75px)',
+                            backgroundSize: '16px 16px',
+                            color: 'hsl(var(--muted-foreground))'
                         }}
                     />
                 </div>
             )}
 
-            {variant === 'dark-slate' && (
-                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-zinc-950 text-zinc-100`}>
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.15),rgba(255,255,255,0))]" />
+            {/* 6. HACES DE LUZ (BEAMS) */}
+            {variant === 'beams' && (
+                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-background`}>
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[radial-gradient(ellipse_at_top,rgba(56,189,248,0.22),transparent_70%)] dark:bg-[radial-gradient(ellipse_at_top,rgba(56,189,248,0.18),transparent_70%)] pointer-events-none" />
+                    <div 
+                        className="absolute inset-0 opacity-[0.25] dark:opacity-[0.15]"
+                        style={{
+                            backgroundImage: `
+                                linear-gradient(to right, currentColor 1px, transparent 1px),
+                                linear-gradient(to bottom, currentColor 1px, transparent 1px)
+                            `,
+                            backgroundSize: '48px 48px',
+                            color: 'hsl(var(--border))'
+                        }}
+                    />
+                    <div className="absolute inset-0 bg-radial from-transparent via-background/40 to-background pointer-events-none" />
                 </div>
             )}
 
+            {/* 7. ONDAS & ESFERAS GLOW */}
+            {variant === 'wave' && (
+                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-background overflow-hidden`}>
+                    <div className="absolute -top-32 left-1/4 w-[450px] h-[450px] rounded-full bg-emerald-400/15 dark:bg-emerald-500/10 blur-[120px] pointer-events-none" />
+                    <div className="absolute top-1/2 -right-20 w-[500px] h-[500px] rounded-full bg-sky-400/15 dark:bg-sky-500/10 blur-[130px] pointer-events-none" />
+                    <div className="absolute -bottom-32 left-10 w-[450px] h-[450px] rounded-full bg-indigo-400/15 dark:bg-indigo-500/10 blur-[140px] pointer-events-none" />
+                </div>
+            )}
+
+            {/* 8. LIMPIO & MINIMAL (CLEAN) */}
             {variant === 'clean' && (
-                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-[#fafafa] dark:bg-zinc-950`} />
+                <div className={`pointer-events-none ${positionClass} inset-0 z-0 bg-background`} />
             )}
 
             {/* Content Slot */}

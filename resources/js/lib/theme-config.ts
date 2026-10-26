@@ -112,51 +112,51 @@ export const FONT_THEMES: Record<string, { id: string; name: string; fontClass: 
 
 export const BACKGROUND_THEMES = [
     {
+        id: 'aurora',
+        name: 'Aurora Boreal',
+        description: 'Auras suaves multicolores adaptables en luz y sombra.',
+        previewClass: 'bg-gradient-to-r from-sky-400/20 via-violet-500/20 to-pink-500/20 border border-sky-300/40'
+    },
+    {
         id: 'dots',
         name: 'Malla de Puntos (Dots)',
-        description: 'Puntos sutiles estilo Shadcn UI.',
-        previewClass: 'bg-zinc-100 dark:bg-zinc-900 border border-dashed border-zinc-300 dark:border-zinc-700'
+        description: 'Micro-puntos geométricos clásicos de Shadcn UI.',
+        previewClass: 'bg-zinc-100 dark:bg-zinc-900 border border-dashed border-zinc-400 dark:border-zinc-700'
     },
     {
         id: 'grid',
         name: 'Retícula Geométrica (Grid)',
-        description: 'Líneas arquitectónicas modernas.',
+        description: 'Líneas arquitectónicas modernas, limpias y elegantes.',
         previewClass: 'bg-zinc-100 dark:bg-zinc-900 border border-zinc-300 dark:border-zinc-700'
     },
     {
-        id: 'aurora',
-        name: 'Aurora Boreal (Gradiente)',
-        description: 'Luces y resplandores suaves multicolores.',
-        previewClass: 'bg-gradient-to-r from-sky-400/20 via-violet-500/20 to-pink-500/20 border border-sky-300/30'
+        id: 'cross-grid',
+        name: 'Cruces Plus (+ Grid)',
+        description: 'Patrón de cruces sutiles de diseño suizo y Shadcn.',
+        previewClass: 'bg-zinc-100 dark:bg-zinc-900 border border-zinc-400 dark:border-zinc-700 font-mono text-center'
     },
     {
         id: 'mesh',
-        name: 'Malla Texturizada (Mesh)',
-        description: 'Degradado neutro con textura suave.',
-        previewClass: 'bg-gradient-to-br from-slate-200 to-zinc-300 dark:from-zinc-800 dark:to-zinc-950'
+        name: 'Gradiente Mesh Fluido',
+        description: 'Degradado suave con micro-textura que resalta productos.',
+        previewClass: 'bg-gradient-to-br from-slate-100 via-sky-50 to-indigo-50 dark:from-zinc-900 dark:via-slate-900 dark:to-zinc-950 border border-border'
     },
     {
-        id: 'cyber-circuit',
-        name: 'Cyber Neon (Circuito)',
-        description: 'Glow cibernético en azul marino y celeste.',
-        previewClass: 'bg-[#0B132B] border border-cyan-400/50 text-cyan-300'
+        id: 'beams',
+        name: 'Haces de Luz (Beams)',
+        description: 'Resplandor superior central que ilumina la tienda.',
+        previewClass: 'bg-gradient-to-b from-sky-200/50 to-transparent dark:from-sky-900/30 dark:to-transparent border border-sky-300/40'
     },
     {
-        id: 'midnight-glass',
-        name: 'Midnight Glass (Glow)',
-        description: 'Esferas luminosas en azul noche sobre fondo oscuro.',
-        previewClass: 'bg-slate-950 border border-blue-500/40 text-blue-300'
+        id: 'wave',
+        name: 'Ondas & Esferas Glow',
+        description: 'Gradientes radiales orgánicos y armónicos.',
+        previewClass: 'bg-gradient-to-tr from-emerald-100/60 via-sky-100/40 to-blue-100/50 dark:from-emerald-950/40 dark:via-sky-950/30 dark:to-blue-950/40 border border-emerald-300/40'
     },
     {
         id: 'clean',
-        name: 'Limpio & Minimalista (Clean)',
-        description: 'Fondo suave sin distracciones.',
+        name: 'Limpio & Minimal (Clean)',
+        description: 'Superficie lisa y balanceada que no compite con las fotos.',
         previewClass: 'bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800'
-    },
-    {
-        id: 'dark-slate',
-        name: 'Oscuro Obsidian (Dark)',
-        description: 'Modo oscuro profundo y refinado.',
-        previewClass: 'bg-zinc-950 text-white border border-zinc-800'
     }
 ];

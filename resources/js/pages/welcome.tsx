@@ -588,24 +588,31 @@ export default function Welcome({ productos, empresa, isExpired = false }: Welco
             </header>
 
             {/* SECCIÓN PRINCIPAL: FILTROS & BÚSQUEDA */}
-            <main className="max-w-6xl mx-auto px-4 md:px-6 py-4 space-y-6">
-                {/* Banner de Confianza y Facilidad de Uso */}
-                <div className="grid grid-cols-3 gap-2 py-2.5 px-4 rounded-2xl bg-card/60 backdrop-blur-md border border-border/60 text-center text-xs">
-                    <div className="flex items-center justify-center gap-1.5 text-muted-foreground">
-                        <Truck className="h-4 w-4 text-primary shrink-0" />
-                        <span className="truncate font-medium">Envíos a todo el país</span>
+            <main className="max-w-6xl mx-auto px-4 md:px-6 py-6 space-y-6">
+                {/* Banner de Beneficios & Confianza */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 py-3 px-5 rounded-2xl bg-card border border-border/80 shadow-xs text-center text-xs">
+                    <div className="flex items-center justify-center gap-2 text-foreground font-semibold py-1">
+                        <div className="p-1.5 rounded-lg bg-sky-50 dark:bg-sky-950 text-sky-600 dark:text-sky-400">
+                            <Truck className="h-4 w-4 shrink-0" />
+                        </div>
+                        <span className="truncate">Envíos a todo el país</span>
                     </div>
-                    <div className="flex items-center justify-center gap-1.5 text-muted-foreground border-x border-border/60">
-                        <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
-                        <span className="truncate font-medium">Compra 100% Segura</span>
+                    <div className="flex items-center justify-center gap-2 text-foreground font-semibold py-1 sm:border-x sm:border-border/80">
+                        <div className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400">
+                            <ShieldCheck className="h-4 w-4 shrink-0" />
+                        </div>
+                        <span className="truncate">Compra 100% Segura</span>
                     </div>
-                    <div className="flex items-center justify-center gap-1.5 text-muted-foreground">
-                        <MessageCircle className="h-4 w-4 text-emerald-600 shrink-0" />
-                        <span className="truncate font-medium">Atención por WhatsApp</span>
+                    <div className="flex items-center justify-center gap-2 text-foreground font-semibold py-1">
+                        <div className="p-1.5 rounded-lg bg-green-50 dark:bg-green-950 text-green-600 dark:text-green-400">
+                            <MessageCircle className="h-4 w-4 shrink-0" />
+                        </div>
+                        <span className="truncate">Atención directa por WhatsApp</span>
                     </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+                {/* Barra de Filtros y Búsqueda */}
+                <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between p-2 rounded-2xl bg-card/60 border border-border/60">
                     {/* Input Búsqueda en vivo */}
                     <div className="relative flex-1 max-w-md">
                         <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -613,12 +620,12 @@ export default function Welcome({ productos, empresa, isExpired = false }: Welco
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             placeholder="Buscar por nombre de producto..."
-                            className="pl-9 h-10 rounded-xl bg-card/90 backdrop-blur-xs border-border/80 text-xs shadow-2xs"
+                            className="pl-9 h-11 rounded-xl bg-background border-border text-xs font-medium shadow-2xs focus-visible:ring-primary/30"
                         />
                         {searchQuery && (
                             <button 
                                 onClick={() => setSearchQuery('')}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1"
                             >
                                 <X className="h-3.5 w-3.5" />
                             </button>
@@ -631,10 +638,10 @@ export default function Welcome({ productos, empresa, isExpired = false }: Welco
                             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
                                 <button
                                     onClick={() => setSelectedTallaFilter('all')}
-                                    className={`px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all ${
+                                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all border ${
                                         selectedTallaFilter === 'all'
-                                            ? 'bg-foreground text-background shadow-xs'
-                                            : 'bg-card/70 border border-border text-muted-foreground hover:text-foreground'
+                                            ? 'bg-foreground text-background border-foreground shadow-xs'
+                                            : 'bg-card border-border text-muted-foreground hover:text-foreground hover:border-primary/40'
                                     }`}
                                 >
                                     Todas
@@ -643,10 +650,10 @@ export default function Welcome({ productos, empresa, isExpired = false }: Welco
                                     <button
                                         key={talla}
                                         onClick={() => setSelectedTallaFilter(talla)}
-                                        className={`px-3 py-1.5 rounded-full text-xs font-semibold shrink-0 transition-all ${
+                                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold shrink-0 transition-all border ${
                                             selectedTallaFilter === talla
-                                                ? 'bg-foreground text-background shadow-xs'
-                                                : 'bg-card/70 border border-border text-muted-foreground hover:text-foreground'
+                                                ? 'bg-foreground text-background border-foreground shadow-xs'
+                                                : 'bg-card border-border text-muted-foreground hover:text-foreground hover:border-primary/40'
                                         }`}
                                     >
                                         Talla {talla}
@@ -656,7 +663,7 @@ export default function Welcome({ productos, empresa, isExpired = false }: Welco
                         )}
 
                         {/* Botones Switch Cuadrícula vs Lista */}
-                        <div className="flex items-center border rounded-xl p-0.5 bg-card/80 border-border/80 shrink-0">
+                        <div className="flex items-center border rounded-xl p-1 bg-background border-border shrink-0 shadow-2xs">
                             <button
                                 type="button"
                                 onClick={() => setUserLayout('grid')}
@@ -677,28 +684,65 @@ export default function Welcome({ productos, empresa, isExpired = false }: Welco
                     </div>
                 </div>
 
-                {/* LISTADO DE PRODUCTOS (GRID O LIST) */}
+                {/* LISTADO DE PRODUCTOS (GRID O LIST) O EMPTY STATE ELEGANTE */}
                 {filteredProductos.length === 0 ? (
-                    <div className="text-center py-16 bg-card/40 rounded-2xl border border-dashed border-border p-8">
-                        <Package className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
-                        <h3 className="font-bold text-base text-foreground">No encontramos productos</h3>
-                        <p className="text-xs text-muted-foreground mt-1">Prueba cambiando tu búsqueda o seleccionando otra talla.</p>
-                        {searchQuery && (
-                            <Button variant="outline" size="sm" onClick={() => setSearchQuery('')} className="mt-4 text-xs">
-                                Limpiar búsqueda
-                            </Button>
-                        )}
+                    <div className="text-center py-16 px-6 bg-card border border-border/80 rounded-3xl shadow-sm relative overflow-hidden">
+                        {/* Decoración sutil de fondo */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.03] to-transparent pointer-events-none" />
+                        
+                        <div className="relative z-10 max-w-md mx-auto space-y-4">
+                            <div className="h-16 w-16 rounded-2xl bg-muted/60 text-muted-foreground/50 border border-border flex items-center justify-center mx-auto shadow-inner">
+                                <Package className="h-8 w-8 text-primary/70" />
+                            </div>
+                            
+                            <div className="space-y-1.5">
+                                <h3 className="font-black text-lg text-foreground tracking-tight">
+                                    {searchQuery ? 'Sin resultados para tu búsqueda' : 'Catálogo listo para publicar productos'}
+                                </h3>
+                                <p className="text-xs text-muted-foreground leading-relaxed">
+                                    {searchQuery 
+                                        ? `No encontramos productos que coincidan con "${searchQuery}". Intenta con otra palabra.`
+                                        : 'Aún no se han agregado productos a esta tienda. ¡Vuelve pronto o contacta al comercio para pedidos especiales!'
+                                    }
+                                </p>
+                            </div>
+
+                            <div className="pt-2 flex items-center justify-center gap-2.5 flex-wrap">
+                                {searchQuery ? (
+                                    <Button 
+                                        variant="outline" 
+                                        size="sm" 
+                                        onClick={() => setSearchQuery('')} 
+                                        className="rounded-xl text-xs font-bold border-border"
+                                    >
+                                        Limpiar búsqueda
+                                    </Button>
+                                ) : (
+                                    empresa?.celular && (
+                                        <a
+                                            href={`https://wa.me/${empresa.celular.replace(/\D/g, '')}?text=Hola,%20me%20gustar%C3%ADa%20consultar%20por%20sus%20productos.`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm transition-all"
+                                        >
+                                            <Phone className="h-3.5 w-3.5" />
+                                            Consultar por WhatsApp
+                                        </a>
+                                    )
+                                )}
+                            </div>
+                        </div>
                     </div>
                 ) : (
                     <div className={
                         userLayout === 'list'
-                            ? 'grid grid-cols-1 md:grid-cols-2 gap-3'
+                            ? 'grid grid-cols-1 md:grid-cols-2 gap-3.5'
                             : 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5'
                     }>
                         {filteredProductos.map((producto) => (
                             <Card 
                                 key={producto.id} 
-                                className={`group overflow-hidden rounded-2xl border border-border/70 bg-card/85 backdrop-blur-xs transition-all duration-300 hover:shadow-xl hover:border-primary/40 ${
+                                className={`group overflow-hidden rounded-2xl border border-border/90 bg-card shadow-xs transition-all duration-300 hover:shadow-xl hover:border-primary/50 ${
                                     userLayout === 'list' ? 'flex flex-row items-center p-3 gap-4' : 'flex flex-col'
                                 }`}
                             >

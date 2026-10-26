@@ -1,5 +1,5 @@
 import { Head, useForm, usePage } from '@inertiajs/react';
-import { Check, Sparkles, Eye, Smartphone, Monitor, Palette, Type, LayoutTemplate, Layers, ArrowLeft } from 'lucide-react';
+import { Check, Sparkles, Eye, Smartphone, Monitor, Palette, Type, LayoutTemplate, Layers, ArrowLeft, Lock } from 'lucide-react';
 import { useState } from 'react';
 
 import AppLayout from '@/layouts/app-layout';
@@ -226,13 +226,22 @@ export default function Personalizar({ empresa, productosMuestra }: Props) {
                         {/* 5. DATOS BÁSICOS DEL COMERCIO */}
                         <div className="space-y-3 pt-2 border-t">
                             <div className="grid gap-1.5">
-                                <Label htmlFor="nombre_empresa" className="text-xs font-semibold">Nombre Visible</Label>
-                                <Input 
-                                    id="nombre_empresa"
-                                    value={data.nombre_empresa} 
-                                    onChange={(e) => setData('nombre_empresa', e.target.value)} 
-                                    placeholder="Nombre de tu negocio" 
-                                />
+                                <Label htmlFor="nombre_empresa" className="text-xs font-semibold flex items-center justify-between">
+                                    <span>Nombre de tu Tienda</span>
+                                    <span className="flex items-center gap-1 text-[11px] font-semibold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2 py-0.5 rounded-full border border-amber-200 dark:border-amber-900/60">
+                                        <Lock className="h-3 w-3" /> Nombre Único
+                                    </span>
+                                </Label>
+                                <div className="relative">
+                                    <Input 
+                                        id="nombre_empresa"
+                                        value={data.nombre_empresa} 
+                                        disabled
+                                        readOnly
+                                        className="h-10 bg-muted/60 text-muted-foreground border-border/80 font-bold text-xs uppercase cursor-not-allowed select-none pr-8" 
+                                    />
+                                    <Lock className="h-4 w-4 text-muted-foreground/60 absolute right-3 top-1/2 -translate-y-1/2" />
+                                </div>
                             </div>
                             <div className="grid gap-1.5">
                                 <Label htmlFor="celular" className="text-xs font-semibold">WhatsApp de Pedidos</Label>
