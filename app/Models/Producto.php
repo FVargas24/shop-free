@@ -9,13 +9,19 @@ class Producto extends Model
 {
     use BelongsToTenant;
 
-    //
     protected $fillable = [
         'empresa_id',
         'nombre',
         'precio',
         'stock',
-        'imagen'
+        'imagen',
+        'tallas',
+        'colores'
+    ];
+
+    protected $casts = [
+        'tallas' => 'array',
+        'colores' => 'array',
     ];
 
 

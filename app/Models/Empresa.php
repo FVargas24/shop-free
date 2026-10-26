@@ -12,7 +12,14 @@ class Empresa extends Model
         'nombre_empresa',
         'slug',
         'celular',
-        'tipo'
+        'tipo',
+        'tema_color',
+        'fondo_estilo',
+        'tipografia',
+        'banner_url',
+        'logo_url',
+        'descripcion',
+        'layout_vista'
     ];
 
     protected static function boot()

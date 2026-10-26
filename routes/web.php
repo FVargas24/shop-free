@@ -33,6 +33,9 @@ Route::prefix('{empresa}')->group(function () {
         Route::patch('productos/{producto}', [ProductoController::class, 'update'])->name('productos.update');
         Route::delete('productos/{producto}', [ProductoController::class, 'destroy'])->name('productos.destroy');
 
+        Route::get('personalizar', [\App\Http\Controllers\EmpresaPersonalizacionController::class, 'edit'])->name('personalizar.edit');
+        Route::patch('personalizar', [\App\Http\Controllers\EmpresaPersonalizacionController::class, 'update'])->name('personalizar.update');
+
         // Move settings inside
         require __DIR__.'/settings.php';
         

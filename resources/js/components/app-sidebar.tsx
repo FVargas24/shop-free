@@ -23,6 +23,11 @@ export function AppSidebar() {
             icon: Package,
         },
         {
+            title: 'Personalizar Catálogo',
+            url: `/${slug}/personalizar`,
+            icon: Store,
+        },
+        {
             title: 'Inventarios',
             url: '#',
             icon: Boxes,

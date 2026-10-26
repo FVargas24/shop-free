@@ -23,7 +23,9 @@ class ProductoController extends Controller
             'nombre' => 'required|string|max:255',
             'precio' => 'required|numeric|min:0',
             'stock' => 'nullable|integer|min:0',
-            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'tallas' => 'nullable|array',
+            'colores' => 'nullable|array',
         ]);
 
         $data = $request->all();
@@ -46,7 +48,9 @@ class ProductoController extends Controller
             'nombre' => 'required|string|max:255',
             'precio' => 'required|numeric|min:0',
             'stock' => 'nullable|integer|min:0',
-            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'tallas' => 'nullable|array',
+            'colores' => 'nullable|array',
         ]);
 
         $data = $request->all();
