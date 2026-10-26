@@ -17,6 +17,7 @@ import { type SharedData } from '@/types';
 import { BackgroundPattern } from '@/components/catalog/background-pattern';
 import { COLOR_THEMES, FONT_THEMES } from '@/lib/theme-config';
 import AppearanceToggleDropdown from '@/components/appearance-dropdown';
+import { toast } from 'sonner';
 
 interface ColorVariant {
     nombre: string;
@@ -189,6 +190,9 @@ export default function Welcome({ productos, empresa, isExpired = false }: Welco
         setQuickQuantity(1);
     };
 
+    // Estado para animar el borde distintivo del producto recién pedido
+    const [recentlyAddedId, setRecentlyAddedId] = useState<number | null>(null);
+
     // Agregar al carrito
     const addToCartWithSelection = (producto: Producto, talla?: string, color?: ColorVariant, qty = 1) => {
         const cartKey = `${producto.id}_${talla || 'notalla'}_${color?.nombre || 'nocolor'}`;
@@ -207,7 +211,24 @@ export default function Welcome({ productos, empresa, isExpired = false }: Welco
             }];
         });
         setQuickViewProduct(null);
-        setIsCartOpen(true);
+
+        // Borde distintivo temporal (1.8s)
+        setRecentlyAddedId(producto.id);
+        setTimeout(() => {
+            setRecentlyAddedId(prev => (prev === producto.id ? null : prev));
+        }, 1800);
+
+        // Toast elegante en azul marino y celeste arriba a la derecha (sin abrir el carrito)
+        const variantText = [
+            talla ? `Talla: ${talla}` : null,
+            color ? `Color: ${color.nombre}` : null,
+            qty > 1 ? `x${qty}` : null,
+        ].filter(Boolean).join(' • ');
+
+        toast('Producto agregado al carrito', {
+            description: `${producto.nombre}${variantText ? ` (${variantText})` : ''} añadido a tu pedido.`,
+            duration: 3000,
+        });
     };
 
     // Click rápido en "+": si tiene variantes, abre modal para elegir; si no, agrega directo
@@ -738,13 +759,19 @@ export default function Welcome({ productos, empresa, isExpired = false }: Welco
                             ? 'grid grid-cols-1 md:grid-cols-2 gap-3.5'
                             : 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5'
                     }>
-                        {filteredProductos.map((producto) => (
-                            <Card 
-                                key={producto.id} 
-                                className={`group overflow-hidden rounded-2xl border border-border/90 bg-card shadow-xs transition-all duration-300 hover:shadow-xl hover:border-primary/50 ${
-                                    userLayout === 'list' ? 'flex flex-row items-center p-3 gap-4' : 'flex flex-col'
-                                }`}
-                            >
+                        {filteredProductos.map((producto) => {
+                            const isRecentlyAdded = recentlyAddedId === producto.id;
+                            return (
+                                <Card 
+                                    key={producto.id} 
+                                    className={`group overflow-hidden rounded-2xl bg-card shadow-xs transition-all duration-300 hover:shadow-xl hover:border-primary/50 relative ${
+                                        isRecentlyAdded
+                                            ? 'border-2 border-sky-400 dark:border-sky-400 ring-4 ring-sky-400/30 shadow-xl shadow-sky-500/10 scale-[1.02]'
+                                            : 'border border-border/90'
+                                    } ${
+                                        userLayout === 'list' ? 'flex flex-row items-center p-3 gap-4' : 'flex flex-col'
+                                    }`}
+                                >
                                 {/* Imagen con Aspect Ratio optimizado */}
                                 <div 
                                     className={`relative bg-muted overflow-hidden cursor-pointer ${
@@ -830,7 +857,8 @@ export default function Welcome({ productos, empresa, isExpired = false }: Welco
                                     </div>
                                 </div>
                             </Card>
-                        ))}
+                        );
+                    })}
                     </div>
                 )}
 

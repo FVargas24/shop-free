@@ -96,7 +96,15 @@ export default function Productos({ productos }: Props) {
         colores: [],
     });
 
+    const isLimitReached = productos.length >= 6;
+
     const openCreateModal = () => {
+        if (isLimitReached) {
+            toast.error('Límite de 6 productos alcanzado', {
+                description: 'Has completado los 6 productos permitidos en tu catálogo.',
+            });
+            return;
+        }
         setEditingProducto(null);
         reset();
         setPreviewImage(null);
@@ -118,8 +126,8 @@ export default function Productos({ productos }: Props) {
             colores: prod.colores || [],
         });
         setPreviewImage(prod.imagen || null);
-        setHabilitarTallas(Boolean(prod.tallas && prod.tallas.length > 0));
-        setHabilitarColores(Boolean(prod.colores && prod.colores.length > 0));
+        setHabilitarTallas(!!prod.tallas && prod.tallas.length > 0);
+        setHabilitarColores(!!prod.colores && prod.colores.length > 0);
         setCustomTalla('');
         setCustomColorName('');
         setOpen(true);
@@ -285,19 +293,32 @@ export default function Productos({ productos }: Props) {
                 <div>
                     <h1 className="text-2xl font-black tracking-tight text-foreground flex items-center gap-2">
                         <span>Mis Productos</span>
-                        <span className="text-xs font-semibold py-0.5 px-2.5 rounded-full bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300 border border-sky-200 dark:border-sky-800">
-                            {productos.length} items
+                        <span className={`text-xs font-bold py-0.5 px-2.5 rounded-full border ${
+                            isLimitReached
+                                ? 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800'
+                                : 'bg-sky-100 text-sky-800 dark:bg-sky-950 dark:text-sky-300 border-sky-200 dark:border-sky-800'
+                        }`}>
+                            {productos.length} / 6 productos
                         </span>
                     </h1>
                     <p className="text-muted-foreground text-xs sm:text-sm mt-0.5">
-                        Administra tu catálogo de forma simple, visual y con variantes opcionales.
+                        Administra tu catálogo de forma simple. Máximo 6 productos por tienda.
                     </p>
                 </div>
 
                 <div className="flex items-center gap-2">
-                    <Button onClick={openCreateModal} className="gap-2 shadow-sm rounded-xl h-10 px-4 font-bold bg-blue-600 hover:bg-blue-700 text-white">
+                    <Button 
+                        onClick={openCreateModal} 
+                        disabled={isLimitReached}
+                        className={`gap-2 shadow-sm rounded-xl h-10 px-4 font-bold text-white transition-all ${
+                            isLimitReached
+                                ? 'bg-muted-foreground/50 cursor-not-allowed opacity-60'
+                                : 'bg-blue-600 hover:bg-blue-700 active:scale-95'
+                        }`}
+                        title={isLimitReached ? 'Has alcanzado el límite máximo de 6 productos' : 'Crear nuevo producto'}
+                    >
                         <Plus className="h-4 w-4" />
-                        Nuevo Producto
+                        {isLimitReached ? 'Límite alcanzado (6/6)' : 'Nuevo Producto'}
                     </Button>
                 </div>
 
@@ -770,15 +791,31 @@ export default function Productos({ productos }: Props) {
                     ))}
 
                     {emptyCards.map((_, i) => (
-                        <Card key={`empty-${i}`} className="border-dashed border-sky-200/60 dark:border-sky-900/40 flex flex-col items-center justify-center p-8 bg-sky-50/10 dark:bg-sky-950/10 rounded-2xl">
-                            <div className="h-10 w-10 rounded-full bg-sky-50 dark:bg-sky-900/30 flex items-center justify-center mb-2.5 text-sky-600/40">
-                                <Package className="h-5 w-5" />
+                        <Card 
+                            key={`empty-${i}`} 
+                            onClick={openCreateModal}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    openCreateModal();
+                                }
+                            }}
+                            className="group border-2 border-dashed border-sky-300/80 dark:border-sky-800/60 hover:border-sky-500 dark:hover:border-sky-400 flex flex-col items-center justify-center p-8 bg-sky-50/20 dark:bg-sky-950/20 hover:bg-sky-50/50 dark:hover:bg-sky-950/40 rounded-2xl cursor-pointer transition-all duration-300 min-h-[360px] text-center shadow-2xs hover:shadow-lg hover:-translate-y-0.5"
+                        >
+                            <div className="h-14 w-14 rounded-2xl bg-sky-100 dark:bg-sky-900/40 text-blue-600 dark:text-sky-300 flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all shadow-xs">
+                                <Plus className="h-7 w-7 transition-colors" />
                             </div>
-                            <Skeleton className="h-4 w-2/3 mb-2 rounded-lg" />
-                            <Skeleton className="h-3 w-1/2 rounded-lg" />
-                            <div className="mt-5 w-full flex gap-2">
-                                <Skeleton className="h-8 flex-1 rounded-xl" />
-                                <Skeleton className="h-8 w-10 rounded-xl" />
+                            <span className="font-black text-sm text-foreground tracking-tight group-hover:text-blue-600 dark:group-hover:text-sky-400 transition-colors">
+                                Agregar Producto
+                            </span>
+                            <span className="text-[11px] text-muted-foreground mt-1 max-w-[170px] leading-relaxed">
+                                Espacio disponible ({productos.length + i + 1} de 6)
+                            </span>
+                            <div className="mt-4 px-3 py-1.5 rounded-xl bg-background/80 dark:bg-card border border-sky-200 dark:border-sky-850 text-[11px] font-bold text-sky-700 dark:text-sky-300 shadow-2xs flex items-center gap-1.5 group-hover:border-sky-400">
+                                <Sparkles className="h-3 w-3" />
+                                <span>Toca para crear</span>
                             </div>
                         </Card>
                     ))}

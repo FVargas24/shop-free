@@ -42,7 +42,14 @@ class ProductoController extends Controller
             $data['imagen'] = '/storage/' . $path;
         }
 
-        $request->user()->empresa->productos()->create($data);
+        $empresa = $request->user()->empresa;
+        if ($empresa && $empresa->productos()->count() >= 6) {
+            return back()->withErrors([
+                'limite' => 'Has alcanzado el límite máximo de 6 productos para tu catálogo.'
+            ]);
+        }
+
+        $empresa->productos()->create($data);
 
         return back();
     }
