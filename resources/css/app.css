@@ -77,49 +77,49 @@
 }
 
 :root {
-    --background: hsl(215, 30%, 97.5%); /* Fondo ligeramente matizado con azul hielo suave */
-    --foreground: hsl(222.2, 47.4%, 11.2%);
+    --background: hsl(216, 33%, 97.5%); /* Fondo sutilmente frío, limpio y moderno */
+    --foreground: hsl(222, 47%, 12%);
     --card: hsl(0, 0%, 100%);
-    --card-foreground: hsl(222.2, 47.4%, 11.2%);
+    --card-foreground: hsl(222, 47%, 12%);
     --popover: hsl(0, 0%, 100%);
-    --popover-foreground: hsl(222.2, 47.4%, 11.2%);
-    --primary: hsl(221.2, 83.2%, 53.3%); /* Azul Marino / Royal Blue */
-    --primary-foreground: hsl(210, 40%, 98%);
+    --popover-foreground: hsl(222, 47%, 12%);
+    --primary: hsl(217, 91%, 56%); /* Azul real vivo */
+    --primary-foreground: hsl(0, 0%, 100%);
     --secondary: hsl(214, 32%, 93%);
-    --secondary-foreground: hsl(222.2, 47.4%, 11.2%);
-    --muted: hsl(214, 30%, 92.5%);
-    --muted-foreground: hsl(215.4, 20%, 46%);
-    --accent: hsl(199, 89%, 48%, 0.12); /* Acento celeste sutil */
-    --accent-foreground: hsl(222.2, 47.4%, 11.2%);
+    --secondary-foreground: hsl(222, 47%, 12%);
+    --muted: hsl(214, 30%, 93%);
+    --muted-foreground: hsl(215, 20%, 46%);
+    --accent: hsl(199, 89%, 48%, 0.12);
+    --accent-foreground: hsl(222, 47%, 12%);
     --destructive: hsl(0, 84.2%, 60.2%);
     --destructive-foreground: hsl(210, 40%, 98%);
-    --border: hsl(214, 45%, 83%); /* Borde divisorio nítido en azul marino / celeste */
-    --input: hsl(214, 45%, 84%);
-    --ring: hsl(199, 89%, 48%); /* Ring celeste brillante */
+    --border: hsl(214, 30%, 88%); /* Borde divisorio sutil y nítido */
+    --input: hsl(214, 30%, 88%);
+    --ring: hsl(199, 89%, 48%);
     --chart-1: hsl(221.2, 83.2%, 53.3%);
     --chart-2: hsl(199, 89%, 48%);
     --chart-3: hsl(197, 37%, 24%);
     --chart-4: hsl(43, 74%, 66%);
     --chart-5: hsl(27, 87%, 67%);
-    --radius: 0.875rem; /* 14px bordes modernos y suaves */
-    --sidebar-background: hsl(216, 38%, 97%); /* Sidebar con suave tono azul grisáceo premium */
-    --sidebar-foreground: hsl(222, 47%, 18%);
+    --radius: 0.875rem;
+    --sidebar-background: hsl(222, 47%, 11%); /* Menú lateral Azul Marino Profundo moderno */
+    --sidebar-foreground: hsl(210, 30%, 96%);
     --sidebar-primary: hsl(199, 89%, 48%);
     --sidebar-primary-foreground: hsl(0, 0%, 100%);
-    --sidebar-accent: hsl(214, 40%, 92%);
-    --sidebar-accent-foreground: hsl(222.2, 47.4%, 11.2%);
-    --sidebar-border: hsl(214, 45%, 82%); /* División lateral en tono azul marino/celeste */
+    --sidebar-accent: hsl(222, 42%, 18%);
+    --sidebar-accent-foreground: hsl(199, 95%, 74%);
+    --sidebar-border: hsl(222, 38%, 18%); /* Borde divisorio oscuro azulado con clase */
     --sidebar-ring: hsl(199, 89%, 48%);
 }
 
 .dark {
-    --background: hsl(224, 71%, 4%); /* Azul Noche Profundo */
+    --background: hsl(224, 71%, 4%);
     --foreground: hsl(213, 31%, 91%);
-    --card: hsl(224, 71%, 5%);
+    --card: hsl(224, 71%, 6%);
     --card-foreground: hsl(213, 31%, 91%);
-    --popover: hsl(224, 71%, 5%);
+    --popover: hsl(224, 71%, 6%);
     --popover-foreground: hsl(213, 31%, 91%);
-    --primary: hsl(199, 89%, 48%); /* Celeste vivo en modo oscuro */
+    --primary: hsl(199, 89%, 48%);
     --primary-foreground: hsl(222.2, 47.4%, 1.2%);
     --secondary: hsl(222.2, 47.4%, 11.2%);
     --secondary-foreground: hsl(210, 40%, 98%);
@@ -129,8 +129,8 @@
     --accent-foreground: hsl(210, 40%, 98%);
     --destructive: hsl(0, 62.8%, 30.6%);
     --destructive-foreground: hsl(210, 40%, 98%);
-    --border: hsl(216, 34%, 17%);
-    --input: hsl(216, 34%, 17%);
+    --border: hsl(220, 30%, 16%);
+    --input: hsl(220, 30%, 16%);
     --ring: hsl(199, 89%, 48%);
     --chart-1: hsl(220, 70%, 50%);
     --chart-2: hsl(160, 60%, 45%);
@@ -138,13 +138,13 @@
     --chart-4: hsl(280, 65%, 60%);
     --chart-5: hsl(340, 75%, 55%);
     --sidebar-background: hsl(224, 71%, 3%);
-    --sidebar-foreground: hsl(0, 0%, 80%);
-    --sidebar-primary: hsl(360, 100%, 100%);
+    --sidebar-foreground: hsl(210, 30%, 95%);
+    --sidebar-primary: hsl(199, 89%, 48%);
     --sidebar-primary-foreground: hsl(0, 0%, 100%);
-    --sidebar-accent: hsl(0, 0%, 15.9%);
-    --sidebar-accent-foreground: hsl(240, 4.8%, 95.9%);
-    --sidebar-border: hsl(0, 0%, 15.9%);
-    --sidebar-ring: hsl(217.2, 91.2%, 59.8%);
+    --sidebar-accent: hsl(222, 42%, 14%);
+    --sidebar-accent-foreground: hsl(199, 95%, 74%);
+    --sidebar-border: hsl(220, 30%, 14%);
+    --sidebar-ring: hsl(199, 89%, 48%);
 }
 
 @layer base {

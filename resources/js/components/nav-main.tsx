@@ -5,6 +5,7 @@ import { type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { Lock, Package, MessageCircle, ShoppingCart, LayoutList, ChevronRight, Store, Settings, Send } from 'lucide-react';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
 
 export function NavMain({ items = [] }: { items: NavItem[] }) {
     const page = usePage();
@@ -19,29 +20,54 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
 
     return (
         <>
-            <SidebarGroup className="px-2 py-0">
-                <SidebarGroupLabel>Menú</SidebarGroupLabel>
-                <SidebarMenu>
-                    {items.map((item) => (
-                        <SidebarMenuItem key={item.title}>
-                            {item.locked ? (
-                                <SidebarMenuButton onClick={(e) => handleLockedClick(item.title, e)} className="text-muted-foreground hover:text-foreground group flex justify-between w-full relative overflow-hidden">
-                                    <div className="flex items-center gap-2">
-                                        {item.icon && <item.icon className="h-4 w-4" />}
-                                        <span>{item.title}</span>
-                                    </div>
-                                    <Lock className="h-3.5 w-3.5 opacity-50 transition-all group-hover:opacity-100 group-hover:text-amber-500" />
-                                </SidebarMenuButton>
-                            ) : (
-                                <SidebarMenuButton asChild isActive={item.url === page.url}>
-                                    <Link href={item.url} prefetch>
-                                        {item.icon && <item.icon />}
-                                        <span>{item.title}</span>
-                                    </Link>
-                                </SidebarMenuButton>
-                            )}
-                        </SidebarMenuItem>
-                    ))}
+            <SidebarGroup className="px-3 py-1">
+                <SidebarGroupLabel className="text-[10px] font-bold uppercase tracking-widest text-sky-400/70 px-3 mb-2">
+                    Navegación
+                </SidebarGroupLabel>
+                <SidebarMenu className="gap-1.5">
+                    {items.map((item) => {
+                        const isActive = item.url === page.url;
+                        return (
+                            <SidebarMenuItem key={item.title}>
+                                {item.locked ? (
+                                    <SidebarMenuButton 
+                                        onClick={(e) => handleLockedClick(item.title, e)} 
+                                        className="text-slate-400 hover:text-slate-200 hover:bg-white/[0.05] group flex justify-between w-full relative overflow-hidden rounded-xl h-10 px-3 transition-all cursor-pointer"
+                                    >
+                                        <div className="flex items-center gap-3">
+                                            {item.icon && <item.icon className="h-4 w-4 text-slate-400 group-hover:text-sky-300 transition-colors" />}
+                                            <span className="text-sm font-medium">{item.title}</span>
+                                        </div>
+                                        <Lock className="h-3.5 w-3.5 text-amber-400/80 opacity-60 transition-all group-hover:opacity-100 group-hover:text-amber-300 group-hover:scale-110" />
+                                    </SidebarMenuButton>
+                                ) : (
+                                    <SidebarMenuButton 
+                                        asChild 
+                                        isActive={isActive}
+                                        className={cn(
+                                            'relative w-full rounded-xl h-10 px-3 transition-all duration-200',
+                                            isActive 
+                                                ? 'bg-gradient-to-r from-sky-500/25 via-sky-500/15 to-transparent text-white font-semibold border border-sky-400/30 shadow-[0_0_15px_rgba(56,189,248,0.15)]' 
+                                                : 'text-slate-300 hover:text-white hover:bg-white/[0.06] font-normal'
+                                        )}
+                                    >
+                                        <Link href={item.url} prefetch className="flex items-center gap-3 w-full">
+                                            {item.icon && (
+                                                <item.icon className={cn(
+                                                    'h-4 w-4 transition-colors',
+                                                    isActive ? 'text-sky-400' : 'text-slate-400 group-hover:text-sky-300'
+                                                )} />
+                                            )}
+                                            <span className="text-sm">{item.title}</span>
+                                            {isActive && (
+                                                <span className="ml-auto flex h-2 w-2 rounded-full bg-sky-400 shadow-[0_0_10px_#38bdf8]" />
+                                            )}
+                                        </Link>
+                                    </SidebarMenuButton>
+                                )}
+                            </SidebarMenuItem>
+                        );
+                    })}
                 </SidebarMenu>
             </SidebarGroup>
 
